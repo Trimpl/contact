@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<contact.Models.User>
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="pricing-header px-2 py-2 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">Choose action, @User.Identity.Name</h1>
+    </div>
+
+    <div class="row align-items-center d-block mx-auto">
+        <div class="col-3 d-block mx-auto">
+            <div class="card card-block d-block mx-auto">
+                <form method="post" asp-controller="Account" asp-action="Logout">
+                    <input class="btn btn-group-vertical btn-outline-default btn-block" type="submit" value="Logout" />
+
+                </form>
+                <form method="post" asp-controller="Users" asp-action="Index">
+                    <input class="btn btn-group-vertical btn-outline-default btn-block" type="submit" value="User managment" />
+                </form>
+                <form method="post" asp-controller="Collections" asp-action="Index">
+                    <input class="btn btn-group-vertical btn-outline-default btn-block" type="submit" value="Naruto" />
+                </form>
+                
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="row align-items-center d-block mx-auto">
+        <div class="col-3 d-block mx-auto">
+            <div class="card card-block d-block mx-auto">
+                <a class="btn btn-outline-dark btn-block d-block mx-auto" asp-controller="Account" asp-action="Login">Login</a>
+                <a class="btn btn-outline-dark btn-block d-block mx-auto" asp-controller="Account" asp-action="Register">Register</a>
+            </div>
+        </div>
+    </div>
+}

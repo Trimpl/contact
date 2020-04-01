@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Этот файл используется процессом публикации или упаковки вашего веб-проекта. Можно настроить поведение этого процесса,
+изменив этот файл MSBuild. Подробности см. на странице https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAmzhq2JU6Pk+Lh4Y2M68ZNwAAAAACAAAAAAAQZgAAAAEAACAAAAC9szPPi6w7EJI3aNyGAfykIbyFqZt3togwKyfSey08bwAAAAAOgAAAAAIAACAAAAAW6gCvB9kQLnvgE2P18zGE1qDG0lQsRWWh5b2y6Ey/V4AAAACf9FyRW35z42yDy6fxCt83AM+o8Fb+DoduyP5BmEucH7AGlFASooYZfgCwdEawwDh0bgSJYPvitXovUGT+VieY2OYX23gm2RhObc20pN/jx1I9hpAqkJSuN7ezHUKU/o+dUZLAZl+peElIxs4329Whf5+5fIzl39JPzRG0HmP9K0AAAACGKQStSYMfEPnsFssed9pg5BLTnAhU0kO7BxRIM7ncqORFgcje02OUF4dJerLj94EQIl0SbykGsikg1k8msm0V</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=%28localdb%29\mssqllocaldb%3bDatabase=stepa%3bTrusted_Connection=True%3b</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>

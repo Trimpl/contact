@@ -1,0 +1,74 @@
+﻿@model IEnumerable<contact.Models.User>
+@{
+    ViewBag.Title = User.Identity.Name;
+}
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+@if (User.Identity.IsAuthenticated)
+{
+<div class="d-block mx-auto">
+    <form asp-action="Delete">
+        <div class="row">
+            <div class="col-lg-4 p-5">
+                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" formaction="Users/Block">Block</button>
+            </div><div class="col-lg-4 p-5">
+                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" formaction="Users/UnBlock">UnBlock</button>
+            </div><div class="col-lg-4 p-5"><button class="btn btn-outline-dark btn-block" type="submit" formaction="Users/Admin">Change role</button></div><div class="col-lg-4 p-5">
+                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" value="submit">Delete</button>
+            </div>
+            <table class="table">
+                <thead class="thead-light">
+                    <tr><th><input type="checkbox" class="all" data-id="d1" title="Choose evrything"></th><th>Email</th><th>Name</th><th>Role</th><th>Lock status</th></tr>
+                </thead>
+                @foreach (var user in Model)
+                {
+                    @if (User.Identity.Name == user.UserName)
+                    {@:<tr class="table-success">
+                }
+                    else
+                    {@:<tr>
+                }
+                    <td>
+                        <input type="checkbox" name="selectedUsers"
+                               id="@user.Id" value="@user.Id"
+                               class="one" data-id="d1">
+                    </td>
+                    <td><strong>@user.UserName</strong></td>
+                    <td>@user.Email</td>
+                    <td>@user.Status</td>
+                    <td>
+                        @if (user.LockoutEnabled == true)
+                        {@:Unblocked
+                        }
+                        else
+                        {@:Blocked
+                        }
+                    </td>
+                    <td><button class="btn btn-outline-dark btn-block" name="userEmail" type="submit" formaction="ProfileCollection/Profile" value="@user.UserName">Профиль</button></td>
+                    @if (user.UserName == user.UserName)
+                    {@:</tr>
+                }
+                }
+            </table>
+                    </div>
+                </form>
+                </div>
+}
+else
+{
+    <a class="btn btn-outline-warning" asp-controller="Account" asp-action="Login">Login</a>
+    <a class="btn btn-outline-warning" asp-controller="Account" asp-action="Register">Register</a>
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".all").on("change", function () {
+            var groupId = $(this).data('id');
+            $('.one[data-id="' + groupId + '"]').prop("checked", this.checked);
+        });
+
+        $(".one").on("change", function () {
+            var groupId = $(this).data('id');
+            var allChecked = $('.one[data-id="' + groupId + '"]:not(:checked)').length == 0;
+            $('.all[data-id="' + groupId + '"]').prop("checked", allChecked);
+        });
+    });
+</script>

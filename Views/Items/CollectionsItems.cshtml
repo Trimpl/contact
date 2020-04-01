@@ -1,0 +1,148 @@
+﻿@model contact.ViewModels.ItemsViewModel
+@using System.Text.Json
+@{
+    ViewData["Title"] = "Айтемы";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".all").on("change", function () {
+            var groupId = $(this).data('id');
+            $('.one[data-id="' + groupId + '"]').prop("checked", this.checked);
+        });
+
+        $(".one").on("change", function () {
+            var groupId = $(this).data('id');
+            var allChecked = $('.one[data-id="' + groupId + '"]:not(:checked)').length == 0;
+            $('.all[data-id="' + groupId + '"]').prop("checked", allChecked);
+        });
+    });
+</script>
+
+<form asp-action="Delete">
+    @if (Model.Collection.Email == User.Identity.Name || Model.status == "god")
+    {
+        <div>
+            <button class="btn btn-primary" type="submit" value="submit">@Localizer["Delete"]</button>
+        </div>
+        <button asp-controller="Items" asp-action="EditCollection" type="submit" class="btn btn-primary" name="Id" value="@Model.Collection.Id">
+            @Localizer["EditeCollection"]
+        </button>
+    }
+    <div class="table-responsive">
+        <table id="myTable" class="table table-hover table-responsive-sm">
+            <thead>
+                <tr>
+                    <th scope="col"><input type="checkbox" class="all" data-id="d1" title="Choose evrything"></th>
+                    <th scope="col" onclick="sortTable(1)">@Localizer["Name"]</th>
+                    <th scope="col" onclick="sortTable(2)">@Localizer["Tag"]</th>
+                    <th scope="col" onclick="sortTable(3)">@Localizer["Email"]</th>
+                    @{
+                        var quote = 4;
+
+                        @foreach (var item in JsonSerializer.Deserialize<Dictionary<string, string[]>>(Model.Collection.Fields))
+                        {
+
+                            @if (item.Value.Length != 0)
+                            {
+                                @foreach (var field in item.Value)
+                                {
+                                    <th scope="col" onclick="sortTable(@quote)">@field</th>
+                                    quote += 1;
+                                }
+                            }
+                        }
+                    }
+                    <th></th>
+                    @if (Model.status == "true")
+                    {
+                        <th></th>
+                    }
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr style="max-height:18rem;">
+                        <td>
+                            <input type="checkbox" name="selectedUsers"
+                                   id="@item.Id" value="@item.Id"
+                                   class="one" data-id="d1">
+                        </td>
+                        <td>@item.Name</td>
+                        <td>@item.Tag</td>
+                        <td>@item.Email</td>
+
+                        @foreach (var fields in JsonSerializer.Deserialize<Dictionary<string, string[]>>(item.Fields))
+                        {
+
+                            @if (fields.Value.Length != 0)
+                            {
+                                @for (int i = 1; i < fields.Value.Count() ; i += 2)
+                                {
+                                    @if (fields.Key != "bool")
+                                    {<td><div style="max-height:500px;overflow-y:scroll;">@fields.Value.ElementAt(i)</div></td>}
+                                    @if (fields.Key == "bool")
+                                        {<td><input type="checkbox" @if (fields.Value.ElementAt(i) == "on") { @: checked
+                                                } disabled /></td>}
+                                }
+                            }
+                        }
+                        @if (Model.status == "true")
+                        {
+                            <td><button asp-controller="Items" asp-action="EditItem" asp-route-id="@item.Id">@Localizer["EditItem"]</button></td>
+                        }
+                        <td><button asp-controller="Items" asp-action="Item" asp-route-id="@item.Id">@Localizer["Item"]</button></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</form>
+
+
+@if (Model.Collection.Email == User.Identity.Name || Model.status == "god")
+{
+    <form asp-action="CreateItem" asp-route-Topic="@Model.Collection.Topic" asp-route-Email="@Model.Collection.Email" asp-route-IdCollection="@Model.Collection.Id" asp-route-Fields="@Model.Collection.Fields">
+        <button>@Localizer["CreateItem"]</button>
+    </form>
+}
+
+<script>
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("myTable");
+        switching = true;
+        dir = "asc";
+        while (switching) {
+            switching = false;
+            rows = table.getElementsByTagName("TR");
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount++;
+            } else {
+
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+</script>

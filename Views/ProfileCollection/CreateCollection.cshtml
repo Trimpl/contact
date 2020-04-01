@@ -1,0 +1,60 @@
+﻿@model contact.ViewModels.CreateCollectionViewModel
+<script src="~/js/addCh.js"></script>
+<link href="~/css/ggg.css" rel="stylesheet" />
+
+
+<form asp-action="CreateF" asp-route-userEmail="@Model.userEmail" method="post">
+    <div class="row justify-content-center">
+        <div class="form-group col-lg-2 col-md-5">
+            <label for="recipient-name" class="col-form-label">@Localizer["Topic"]</label>
+            <input type="text" name="topic" class="form-control" id="recipient-name">
+        </div>
+        <div class="form-group col-lg-2 col-md-5">
+            <label for="message-text" class="col-form-label">@Localizer["Theme"]</label>
+            <select name="theme" class="form-control" id="message-text">
+                <option value="Alcohol">@Localizer["Alcohol"]</option>
+                <option value="Cars">@Localizer["Cars"]</option>
+                <option value="Guns">@Localizer["Guns"]</option>
+                <option value="Phones">@Localizer["Phones"]</option>
+            </select>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-lg-4 col-md-10">
+            <label for="message-text" class="col-form-label">@Localizer["Description"]</label>
+            <textarea name="description" class="form-control" id="message-text"></textarea>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-lg-3 col-md-4">
+            <input type="text" style="display : none;" id="imgur_link" name="img" value="" />
+            <input type="text" style="display : none;" id="json" name="json" value="" />
+            <div class="custom-file ">
+                <input type="file" class="custom-file-input" onchange="upload(this.files[0])">
+                <label class="custom-file-label text-truncate" for="customFile" id="Label">@Localizer["Upload"]</label>
+            </div>
+        </div>
+    </div>
+        <div id="add_field_area">
+            <div id="add0" class="add"></div>
+        </div>
+        <div class="row justify-content-center my-3">
+            <select id="selectt" name="language" class="custom-select col-1">
+                <option value="Int">@Localizer["Int"]</option>
+                <option value="Str">@Localizer["Str"]</option>
+                <option value="Date">@Localizer["Date"]</option>
+                <option value="Bool">@Localizer["Bool"]</option>
+            </select>
+            <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
+        </div>
+        @*<div class="row justify-content-center my-3">
+            <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
+        </div>*@
+        <div class="row justify-content-center">
+            <div>
+                <button class="btn btn-primary" type="submit">
+                    <div class="btn-txt">@Localizer["Create"]</div>
+                </button>
+            </div>
+        </div>
+</form>

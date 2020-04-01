@@ -1,0 +1,34 @@
+﻿@model contact.ViewModels.LoginViewModel
+    <meta name="google-signin-client_id" content="70295867616-omn6fmsti8q1u8pohningq8uis9legiu.apps.googleusercontent.com">
+    <div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+        <h1 class="display-4">@Localizer["Login"]</h1>
+    </div>
+    <form method="post" asp-controller="Account" asp-action="Login"
+          asp-route-returnUrl="@Model.ReturnUrl">
+        <div class="form-row text-center" asp-validation-summary="ModelOnly"></div>
+        <div class="col-3 d-block mx-auto">
+            <label></label><br />
+            <input class="form-control d-block mx-auto text-center" placeholder="@Localizer["Enteremail"]" asp-for="Email" />
+            <span asp-validation-for="Email"></span>
+        </div>
+        <div class="col-3 d-block mx-auto">
+            <label></label><br />
+            <input class="form-control d-block mx-auto text-center" placeholder="@Localizer["password"]" asp-for="Password" />
+            <span asp-validation-for="Password"></span>
+        </div>
+        <div class="col-3 d-block mx-auto">
+            <div class="custom-control custom-checkbox mr-sm-2">
+                <label></label><br />
+                <input type="checkbox" class="custom-control-input" id="customControlAutosizing" asp-for="RememberMe">
+                <label class="custom-control-label" for="customControlAutosizing">@Localizer["Remember"]</label>
+            </div>
+        </div>
+        <div class="row align-items-center d-block mx-auto">
+            <div class="col-3 d-block mx-auto">
+                <div class="card card-block d-block mx-auto">
+                    <input class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" value="@Localizer["Login"]">
+                </div>
+            </div>
+        </div>
+
+    </form>

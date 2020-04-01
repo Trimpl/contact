@@ -1,0 +1,96 @@
+﻿@model contact.ViewModels.ItemViewModel
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(
+        function Again() {
+            var name = $('#searchh').val();
+            name = encodeURIComponent(name);
+            console.log(name);
+            $.ajax({
+                url: '@Url.Action("ListComments", "Items")?IdItem=' + name,
+                async: true,
+                cache: false,
+                success: function (data) {
+                    var string = '';
+                    $.each(data, function (k, val) {
+                        string += '<div id="' + k + '"><h5>' + val.userEmail + '</h5><p>' + val.comment+' Created at:'+ val.time + '</p></div>';
+                    });
+                    if ($('#results').html() != string) {
+                            $('#results').empty();
+                        $('#results').append(string);
+                    };
+                    setTimeout(Again,4000);
+                }
+            });
+        });
+</script>
+<script type="text/javascript">
+    function Like() {
+        var name = $('#searchh').val();
+            name = encodeURIComponent(name);
+        console.log($('#like').html());
+        if ($('#like').html() == '<i class="far fa-heart"></i>') {
+            $.ajax({
+                url: '@Url.Action("Like", "Items")?ItemId=' + name,
+                async: true,
+                cache: false,
+                success: function (data) {
+                    $('#intLike').empty();
+                    $('#intLike').append(data);
+                }
+            });
+            $('#like').empty();
+            $('#like').append('<i class="fas fa-heart"></i>');
+        }
+        else {
+            $.ajax({
+                url: '@Url.Action("Like", "Items")?ItemId=' + name,
+                async: true,
+                cache: false,
+                success: function (data) {
+                    $('#intLike').empty();
+                    $('#intLike').append(data);
+                }
+            });
+            $('#like').empty();
+            $('#like').append('<i class="far fa-heart"></i>');
+        }
+        
+    }
+</script>
+@{
+    ViewData["Title"] = "View";
+}
+<div class="card">
+    <div class="card-body">
+        @if (Model.Item.Img != null)
+        {<img height="180" width="100%" class="rounded mt-1" src="@Model.Item.Img" />}
+    </div>
+</div>
+<div id="intLike"><p>@Model.Likes</p></div>
+<div id="likes">
+    <button type="button" class="btn btn-secondary btn-lg" id="like" onclick="Like()" @if (!User.Identity.IsAuthenticated) {@:disabled
+            }>@if (Model.Liked == false)
+    {<i class="far fa-heart"></i>}
+    else
+    {<i class="fas fa-heart"></i>}</button>
+</div>
+<div>
+    <input type="hidden" id="searchh" name="name" value="@Model.Item.Id" />
+
+</div>
+<div>
+    <a asp-action="EditItem" asp-route-id="@Model.Item.Id">@Localizer["EditItem"]</a> |
+    <a asp-action="CollectionsItems" asp-route-id="@Model.Item.IdCollection">@Localizer["Back"]</a>
+</div>
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <form asp-action="CreateComment" method="post">
+            <input type="text" name="Text" />
+            <button type="submit" name="IdItem" value="@Model.Item.Id">@Localizer["Add"]</button>
+        </form>
+    }
+</div>
+<div id="results"></div>

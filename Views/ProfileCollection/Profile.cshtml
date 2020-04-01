@@ -1,0 +1,80 @@
+﻿@model contact.ViewModels.CollectionsViewModel
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="~/js/add.js"></script>
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link href="~/css/ggg.css" rel="stylesheet" />
+@{
+    ViewData["Title"] = Model.userEmail;
+}
+
+<h1>@Model.userEmail</h1>
+
+<div class="table-responsive">
+    <table class="table table-hover table-responsive-sm">
+        <thead>
+            <tr>
+                <th scope="col">@Localizer["Topic"]</th>
+                @*<th>@Localizer["Description"]</th>*@
+                <th scope="col">@Localizer["Theme"]</th>
+                <th scope="col">Email</th>
+                <th scope="col">@Localizer["Items"]</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var collection in Model.Collections)
+            {
+                @if (collection.Email == User.Identity.Name || Model.status == "admin" || Model.status == "god")
+                {
+                    <tr>
+                        <td>@collection.Topic</td>
+                        @*<td><p class="text-justify" style="max-height:300px; overflow-y:scroll;">@collection.Description</p></td>*@
+                        <td>@collection.Theme</td>
+                        <td>@collection.Email</td>
+                        @*<td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                    Описание
+                                </button>
+                                <div class="dropdown-menu p-4 text-muted" style="max-width: 200px; z-index:1;">
+                                    <p>@collection.Description</p>
+                                </div>
+                            </div>
+                        </td>*@
+                        <td>
+                            @if (collection.Img != null)
+                            {<img style="max-width:100%; max-height:180px;"src="@collection.Img" />}
+                        </td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Не придумал
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                    <form asp-controller="Items" asp-action="CollectionsItems" asp-route-Id="@collection.Id">
+                                        <button type="submit" class="dropdown-item" name="Id" value="@collection.Id">
+                                            @Localizer["Collection"]
+                                        </button>
+                                    </form>
+                                    <form asp-controller="Items" asp-action="EditCollection" asp-route-Id="@collection.Id">
+                                        <button type="submit" class="dropdown-item" name="Id" value="@collection.Id">
+                                            @Localizer["Edit"]
+                                        </button>
+                                    </form>
+                                    <form asp-controller="ProfileCollection" asp-action="Delete" asp-route-userEmail="@Model.userEmail">
+                                        <button type="submit" class="dropdown-item" name="Id" value="@collection.Id">
+                                            @Localizer["Delete"]
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+<form asp-controller="ProfileCollection" asp-action="CreateCollection" class="row justify-content-center">
+    <button class="btn btn-primary" name="userEmail" value="@Model.userEmail">@Localizer["Create"] <i class="fas fa-plus"></i></button>
+</form>

@@ -1,0 +1,9 @@
+﻿@model  contact.Models.Item
+
+<h1>@Model.Name</h1>
+<form asp-action="EditSave" method="post">
+    <input type="hidden" asp-for="@Model.Id" name="Id"/>
+    <input value="@Model.Name" name="Name" class="form-control" />
+    <input value="@Model.Tag" name="Tag" class="form-control" />
+    <button class="btn btn-outline-dark">@Localizer["Save"]</button>
+</form>

@@ -1,0 +1,11 @@
+﻿@model contact.Models.Collect
+
+<h1>@Model.Topic</h1>
+<form asp-action="EditSaveCollection" method="post">
+    <input type="hidden" asp-for="@Model.Id" name="Id" />
+    Topic
+    <input value="@Model.Topic" name="Topic" class="form-control" />
+    Description
+    <input value="@Model.Description" name="Description" class="form-control" />
+    <button class="btn btn-outline-dark">@Localizer["Save"]</button>
+</form>

@@ -1,0 +1,102 @@
+﻿@model contact.ViewModels.CreateItemViewModel
+@using System.Text.Json
+    <script src="~/js/addCh.js"></script>
+<script type="text/javascript">
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    var forms = document.getElementsByClassName('needs-validation');
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+
+    </script>
+
+<div>
+    <form asp-action="Create" asp-route-Topic="@Model.Topic" asp-route-Email="@Model.Email" asp-route-IdCollection="@Model.IdCollection" method="post" class="needs-validation" novalidate>
+        <div class="form-group">
+            <label name="Topic" value="@Model.Topic" for="recipient-name" class="col-form-label">@Model.Topic</label>
+        </div>
+        <div class="form-group">
+            <label name="Email" value="@Model.Email" for="recipient-name" class="col-form-label">@Model.Topic</label>
+        </div>
+
+        <div class="form-group">
+            <label for="recipient-name" class="col-form-label">@Localizer["Name"]</label>
+            <input required type="text" name="Name" class="form-control" id="recipient-name">
+            <div class="invalid-feedback">
+                @Localizer["feedback"]
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="validationTooltip03" class="col-form-label">@Localizer["Tag"]</label>
+            <input required type="text" name="Tag" class="form-control" id="validationTooltip03" value="#">
+            <div class="invalid-feedback">
+                @Localizer["feedback"]
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="text" style="display : none;" id="imgur_link" name="img" value="" />
+            <label class="custom-file-upload">
+                <input type="file" onchange="upload(this.files[0])">
+                @Localizer["Upload"]
+            </label>
+        </div>
+        <div class="form-group">
+            @foreach (var collection in JsonSerializer.Deserialize<Dictionary<string, string[]>>(Model.Fields))
+            {
+                @if (collection.Value.Length != 0)
+                {
+                    @foreach (var value in collection.Value)
+                    {
+                        @if (collection.Key == "int")
+                        {
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">@value</label>
+                                <input type="hidden" id="Int" name="Int" class="form-control" value="@value">
+                                <input type="number" id="Int" name="Int" class="form-control">
+                            </div>
+                        }
+                        @if (collection.Key == "str")
+                        {
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">@value</label>
+                                <input type="hidden" id="Str" name="Str" class="form-control" value="@value">
+                                <input type="text" id="Str" name="Str" class="form-control">
+                            </div>
+                        }
+                        @if (collection.Key == "date")
+                        {
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">@value</label>
+                                <input type="hidden" id="Date" name="Date" class="form-control" value="@value">
+                                <input type="date" id="Date" name="Date" class="form-control">
+                            </div>
+                        }
+                        @if (collection.Key == "bool")
+                        {
+                            <div class="form-group">
+                                <label for="recipient-name" class="col-form-label">@value</label>
+                                <input type="hidden" id="Bool" name="Bool" class="form-control" value="@value">
+                                <input type="checkbox" id="Bool" name="Bool" class="form-control">
+                            </div>
+                        }
+                    }
+                }
+            }
+        </div>
+        <div class="box">
+            <button class="btn btn-secondary" type="submit">
+                <div class="btn-txt">@Localizer["CreateItem"]</div>
+            </button>
+        </div>
+    </form>
+</div>
