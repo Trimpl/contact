@@ -9,10 +9,15 @@
     <form asp-action="Delete">
         <div class="row">
             <div class="col-lg-4 p-5">
-                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" formaction="Users/Block">Block</button>
-            </div><div class="col-lg-4 p-5">
-                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" formaction="Users/UnBlock">UnBlock</button>
-            </div><div class="col-lg-4 p-5"><button class="btn btn-outline-dark btn-block" type="submit" formaction="Users/Admin">Change role</button></div><div class="col-lg-4 p-5">
+                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" asp-controller="Users" asp-action="Block">Block</button>
+            </div>
+            <div class="col-lg-4 p-5">
+                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" asp-controller="Users" asp-action="UnBlock">UnBlock</button>
+            </div>
+            <div class="col-lg-4 p-5">
+                <button class="btn btn-outline-dark btn-block" type="submit" asp-controller="Users" asp-action="Admin">Change role</button>
+            </div>
+            <div class="col-lg-4 p-5">
                 <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" value="submit">Delete</button>
             </div>
             <table class="table">
@@ -43,7 +48,7 @@
                         {@:Blocked
                         }
                     </td>
-                    <td><button class="btn btn-outline-dark btn-block" name="userEmail" type="submit" formaction="ProfileCollection/Profile" value="@user.UserName">Профиль</button></td>
+                    <td><button class="btn btn-outline-dark btn-block" asp-route-userEmail="@user.UserName" asp-controller="ProfileCollection"  asp-action="Profile" type="submit">Профиль</button></td>
                     @if (user.UserName == user.UserName)
                     {@:</tr>
                 }

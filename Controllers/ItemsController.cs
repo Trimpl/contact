@@ -30,9 +30,6 @@ namespace contact.Controllers
             _context = context;
             _context2 = context2;
         }
-        //public string Email;
-        //public string Topic;
-        //public string id;
         public async Task<IActionResult> CollectionsItems(string Id)
         {
             Collect collectionUser = _context.AspNetCollection.Find(Id);
@@ -95,10 +92,13 @@ namespace contact.Controllers
                     newBooles.Add(booles[i + 1]);
                 };
             };
-            if (booles.Last() != "on") 
+            if (booles.Length != 0)
             {
-                newBooles.Add(booles.Last());
-                newBooles.Add("off");
+                if (booles.Last() != "on")
+                {
+                    newBooles.Add(booles.Last());
+                    newBooles.Add("off");
+                };
             };
             Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>
             {
@@ -186,11 +186,81 @@ namespace contact.Controllers
             return View(item);
         }
 
-        public async Task<ActionResult> EditSave(string Tag, string Name, string Id)
+        public async Task<ActionResult> EditSave(string Tag, string Name, string Id, string img)
         {
+            string[] integers = Request.Form["Int"];
+            string[] strings = Request.Form["Str"];
+            string[] dates = Request.Form["Date"];
+            string[] booles = Request.Form["Bool"];
+            List<string> newBooles = new List<string>();
+            for (int i = 0; i < booles.Length - 1; i++)
+            {
+                if (booles[i] != "on" && booles[i + 1] != "on")
+                {
+                    newBooles.Add(booles[i]);
+                    newBooles.Add("off");
+                }
+                else if (booles[i] != "on" && booles[i + 1] == "on")
+                {
+                    newBooles.Add(booles[i]);
+                    newBooles.Add(booles[i + 1]);
+                };
+            };
+            if (booles.Length != 0)
+            {
+                if (booles.Last() != "on")
+                {
+                    newBooles.Add(booles.Last());
+                    newBooles.Add("off");
+                };
+            };
+            Dictionary<string, string[]> dictionary = new Dictionary<string, string[]>
+            {
+                ["int"] = integers,
+                ["str"] = strings,
+                ["date"] = dates,
+                ["bool"] = newBooles.ToArray(),
+            };
             Item item = await _context2.AspNetItem.FindAsync(Id);
+            foreach (Tags tag in _tag.Tags.ToList())
+            {
+                if (tag.ItemId.Contains(Id))
+                {
+                    tag.ItemId = tag.ItemId.Replace(Id + '+' + item.Name + ',', "");
+                    _tag.Update(tag);
+                };
+            };
+            await _tag.SaveChangesAsync();
             item.Tag = Tag;
             item.Name = Name;
+            item.Img = img;
+            item.Fields = JsonSerializer.Serialize(dictionary);
+            List<string> tags = Tag.Split("#").ToList();
+            tags.Remove("");
+            foreach (string tag in tags)
+            {
+                Tags newTag = new Tags();
+                Tags oldTag = _tag.Tags.Find(tag);
+                if (oldTag == null)
+                {
+                    newTag = new Tags
+                    {
+                        Id = tag,
+                        ItemId = item.Id + '+' + item.Name + ',',
+                        Tag = tag,
+                    };
+                    _tag.Add(newTag);
+                }
+                else
+                {
+                    if (!oldTag.ItemId.Contains(Id))
+                    {
+                        oldTag.ItemId += item.Id + '+' + item.Name + ',';
+                        _tag.Update(oldTag);
+                    };
+                };
+            };
+            await _tag.SaveChangesAsync();
             _context2.Update(item);
             await _context2.SaveChangesAsync();
             return RedirectToRoute("default", new { controller = "Items", action = "CollectionsItems", Id = item.IdCollection });
@@ -201,11 +271,13 @@ namespace contact.Controllers
             return View(collecttion);
         }
 
-        public async Task<ActionResult> EditSaveCollection(string Topic, string Description, string Id)
+        public async Task<ActionResult> EditSaveCollection(string Topic, string Description, string Id, string Theme, string img)
         {
             Collect collection = _context.AspNetCollection.Find(Id);
             collection.Topic = Topic;
-            collection.Description = Description;
+            collection.Description = Description; ;
+            collection.Theme = Theme;
+            collection.Img = img;
             _context.Update(collection);
             await _context.SaveChangesAsync();
             foreach (Item item in _context2.AspNetItem)
@@ -227,6 +299,11 @@ namespace contact.Controllers
             Item.comments = new List<Comments>();
             Item.comments = _comment.Comment.Where(x => x.ItemId == Id).ToList();
             model.Item = Item;
+            if (User.Identity.IsAuthenticated)
+            {
+                User user = await _userManager.FindByNameAsync(User.Identity.Name);
+                if (user.UserName == Item.Email || user.Status == "god" || user.Status == "admin") model.Status = true;
+            }
             if (_like.Like.Find(Id) != null)
             {
                 model.Liked = _like.Like.Find(Id).userEmail.Split(',').Contains(User.Identity.Name);

@@ -85,14 +85,14 @@
                         <span class="input-group-text bg-white" id=""><i class="fas fa-search"></i></span>
                     </div>
                     <input type="search" placeholder="@Localizer["Search"]" onkeyup="Search()" onclick="Search()" id="search" class="form-control rounded-right">
-                    <div id="searchDiv" class="container bg-white shadow text-dark rounded" style="display: block; position: absolute; z-index: 9999; margin-top:38px; overflow-y: scroll; max-width: inherit; max-height: 500px;"></div>
+                    <div id="searchDiv" class="container bg-white shadow text-dark rounded" style="display: block; position: absolute; z-index: 9999; margin-top:38px; overflow-y: auto; max-width: inherit; max-height: 500px;"></div>
                 </div>
                     @await Html.PartialAsync("_SelectLanguagePartial")
             </div>
         </nav>
     </header>
     <div class="container-fluid">
-        <main role="main" class="mt-5 pt-5">
+        <main role="main" class="my-5 pt-5">
             @RenderBody()
         </main>
     </div>

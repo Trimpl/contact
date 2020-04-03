@@ -1,9 +1,105 @@
-﻿@model  contact.Models.Item
-
+﻿@model contact.Models.Item
+@using System.Text.Json
+    <script src="~/js/addCh.js"></script>
 <h1>@Model.Name</h1>
+
+
 <form asp-action="EditSave" method="post">
-    <input type="hidden" asp-for="@Model.Id" name="Id"/>
-    <input value="@Model.Name" name="Name" class="form-control" />
-    <input value="@Model.Tag" name="Tag" class="form-control" />
-    <button class="btn btn-outline-dark">@Localizer["Save"]</button>
+    <input type="hidden" asp-for="@Model.Id" name="Id" />
+    <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-4 mb-2">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@Localizer["Name"]</div>
+                </div>
+                <input required type="text" name="Name" class="form-control rounded-right" id="recipient-name" value="@Model.Name">
+                <div class="invalid-feedback">
+                    @Localizer["feedback"]
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-4 mb-2">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">@Localizer["Tag"]</div>
+                </div>
+                <input required type="text" name="Tag" class="form-control rounded-right" id="validationTooltip03" value="@Model.Tag">
+                <div class="invalid-feedback">
+                    @Localizer["feedback"]
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-lg-7 col-md-7 text-center" id="cartinka">
+            @if (Model.Img != "")
+            {
+                <img style="width:100%;max-width:900px;max-height:500px;" id="cartinka" class="mx-auto rounded shadow mb-3" src="@Model.Img" />
+            }
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-lg-6 col-md-8 my-2">
+            <input type="text" style="display : none;" id="imgur_link" name="img" value="@Model.Img" />
+            <div class="custom-file ">
+                <input type="file" class="custom-file-input" onchange="upload(this.files[0])">
+                <label class="custom-file-label text-truncate" for="customFile" id="Label">@Localizer["Upload"]</label>
+            </div>
+        </div>
+    </div>
+
+    @foreach (var fields in JsonSerializer.Deserialize<Dictionary<string, string[]>>(Model.Fields))
+    {
+        if (fields.Value.Length != 0)
+        {
+            for (int j = 0; j < fields.Value.Length; j += 2)
+            {
+                @if (fields.Key == "int")
+                {
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8 mb-2">
+                            <label for="recipient-name" class="col-form-label">@fields.Value.ElementAt(j)</label>
+                            <input type="hidden" id="Int" name="Int" class="form-control" value="@fields.Value.ElementAt(j)">
+                            <input type="number" id="Int" name="Int" class="form-control" value="@fields.Value.ElementAt(j + 1)">
+                        </div>
+                    </div>
+                }
+                @if (fields.Key == "str")
+                {
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8 mb-2">
+                            <label for="recipient-name" class="col-form-label">@fields.Value.ElementAt(j)</label>
+                            <input type="hidden" id="Str" name="Str" class="form-control" value="@fields.Value.ElementAt(j)">
+                            <textarea type="text" id="Str" name="Str" style="min-height:150px;max-height:200px;" class="form-control">@fields.Value.ElementAt(j+1)</textarea>
+                        </div>
+                    </div>
+                }
+                @if (fields.Key == "date")
+                {
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8 mb-2">
+                            <label for="recipient-name" class="col-form-label">@fields.Value.ElementAt(j)</label>
+                            <input type="hidden" id="Date" name="Date" class="form-control" value="@fields.Value.ElementAt(j)">
+                            <input type="date" id="Date" name="Date" class="form-control" value="@fields.Value.ElementAt(j+1)">
+                        </div>
+                    </div>
+                }
+                @if (fields.Key == "bool")
+                {
+                    <div class="row justify-content-center">
+                        <div class="col-lg-6 col-md-8 mb-2">
+                            <input type="hidden" id="Bool" name="Bool" class="form-control" value="@fields.Value.ElementAt(j)">
+                            <label for="recipient-name" class="col-form-label">
+                                @fields.Value.ElementAt(j): <input type="checkbox" id="Bool" name="Bool" style="height:15px;width:15px;" @if (fields.Value.ElementAt(j + 1) == "on") { @: checked
+                                                                   }>
+                        </label>
+                    </div>
+                </div>
+            }
+            }
+        }
+    }
+    <div class="row justify-content-center">
+        <button class="btn btn-outline-dark">@Localizer["Save"]</button>
+    </div>
 </form>

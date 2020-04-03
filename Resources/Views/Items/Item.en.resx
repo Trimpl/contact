@@ -124,6 +124,6 @@
     <value>Back to list</value>
   </data>
   <data name="EditItem" xml:space="preserve">
-    <value>Доделать кнопку</value>
+    <value>Edit item</value>
   </data>
 </root>

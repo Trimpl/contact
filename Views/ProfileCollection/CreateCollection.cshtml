@@ -22,8 +22,11 @@
     <div class="row justify-content-center">
         <div class="form-group col-lg-4 col-md-10">
             <label for="message-text" class="col-form-label">@Localizer["Description"]</label>
-            <textarea name="description" class="form-control" id="message-text"></textarea>
+            <textarea name="description" style="min-height:200px;" class="form-control" id="message-text"></textarea>
         </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="form-group col-lg-7 col-md-7 text-center" id="cartinka"></div>
     </div>
     <div class="row justify-content-center">
         <div class="form-group col-lg-3 col-md-4">
@@ -35,26 +38,26 @@
             </div>
         </div>
     </div>
-        <div id="add_field_area">
-            <div id="add0" class="add"></div>
-        </div>
-        <div class="row justify-content-center my-3">
-            <select id="selectt" name="language" class="custom-select col-1">
-                <option value="Int">@Localizer["Int"]</option>
-                <option value="Str">@Localizer["Str"]</option>
-                <option value="Date">@Localizer["Date"]</option>
-                <option value="Bool">@Localizer["Bool"]</option>
-            </select>
-            <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
-        </div>
-        @*<div class="row justify-content-center my-3">
+    <div id="add_field_area">
+        <div id="add0" class="add"></div>
+    </div>
+    <div class="row justify-content-center my-3">
+        <select id="selectt" name="language" class="custom-select col-5 col-md-3 col-lg-2">
+            <option value="Int">@Localizer["Int"]</option>
+            <option value="Str">@Localizer["Str"]</option>
+            <option value="Date">@Localizer["Date"]</option>
+            <option value="Bool">@Localizer["Bool"]</option>
+        </select>
+        <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
+    </div>
+    @*<div class="row justify-content-center my-3">
             <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
         </div>*@
-        <div class="row justify-content-center">
-            <div>
-                <button class="btn btn-primary" type="submit">
-                    <div class="btn-txt">@Localizer["Create"]</div>
-                </button>
-            </div>
+    <div class="row justify-content-center">
+        <div>
+            <button class="btn btn-primary" type="submit">
+                <div class="btn-txt">@Localizer["Create"]</div>
+            </button>
         </div>
+    </div>
 </form>

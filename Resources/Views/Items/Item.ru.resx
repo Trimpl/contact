@@ -124,6 +124,6 @@
     <value>Вернуться к списку</value>
   </data>
   <data name="EditItem" xml:space="preserve">
-    <value>Доделать кнопку</value>
+    <value>Редактировать</value>
   </data>
 </root>

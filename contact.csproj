@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="DragAndDropMultiSelectorList" Version="1.0.3" />
     <PackageReference Include="jQuery" Version="3.4.1" />
     <PackageReference Include="jquery.event.drag" Version="2.2.0" />

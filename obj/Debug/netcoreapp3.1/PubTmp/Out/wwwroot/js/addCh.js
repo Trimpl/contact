@@ -34,6 +34,8 @@ function upload(file) {
 	xhr.onload = function () {
 		$("#imgur_link").val(JSON.parse(xhr.responseText).data.link);
 		$("#Label").text(file.name);
+		$("#cartinka").empty();
+		$("#cartinka").append('<img style="width:100%;max-width:900px;max-height:500px;" class="mx-auto rounded shadow mb-3" src="' + JSON.parse(xhr.responseText).data.link + '" />');
 	}
 	xhr.send(fd);
 }

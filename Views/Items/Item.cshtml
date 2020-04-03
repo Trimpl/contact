@@ -1,12 +1,12 @@
 ﻿@model contact.ViewModels.ItemViewModel
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="//ajax.aspnetcdn.com/ajax/jquery.ui/1.10.3/jquery-ui.min.js"></script>
+@using System.Text.Json
 <script type="text/javascript">
     $(document).ready(
         function Again() {
             var name = $('#searchh').val();
             name = encodeURIComponent(name);
-            console.log(name);
             $.ajax({
                 url: '@Url.Action("ListComments", "Items")?IdItem=' + name,
                 async: true,
@@ -14,11 +14,22 @@
                 success: function (data) {
                     var string = '';
                     $.each(data, function (k, val) {
-                        string += '<div id="' + k + '"><h5>' + val.userEmail + '</h5><p>' + val.comment+' Created at:'+ val.time + '</p></div>';
+                        string += '<div id="' + k + '" class="row">' +
+                                        '<div class="col-sm-12 col-md-8 mb-2">' +
+                                            '<div class="card">' +
+                                                '<div class="card-header d-flex justify-content-between">' +
+                                                    '<b>' + val.userEmail + '</b><small class="ml-auto">' + val.time + '</small>'+
+                                                '</div>' +
+                                                '<div class="card-body">'+
+                                                    '<p class="card-text">' + val.comment + '</p>'+
+                                                '</div>' +
+                                            '</div>' +
+                                        '</div>' +
+                                    '</div>';
                     });
                     if ($('#results').html() != string) {
                             $('#results').empty();
-                        $('#results').append(string);
+                            $('#results').append(string);
                     };
                     setTimeout(Again,4000);
                 }
@@ -28,20 +39,17 @@
 <script type="text/javascript">
     function Like() {
         var name = $('#searchh').val();
-            name = encodeURIComponent(name);
-        console.log($('#like').html());
-        if ($('#like').html() == '<i class="far fa-heart"></i>') {
+        name = encodeURIComponent(name);
+        if ($('#like').html().includes('<i class="far fa-heart"></i>')) {
             $.ajax({
                 url: '@Url.Action("Like", "Items")?ItemId=' + name,
                 async: true,
                 cache: false,
                 success: function (data) {
-                    $('#intLike').empty();
-                    $('#intLike').append(data);
+                    $('#like').empty();
+                    $('#like').append(data + ' <i class="fas fa-heart"></i>');
                 }
             });
-            $('#like').empty();
-            $('#like').append('<i class="fas fa-heart"></i>');
         }
         else {
             $.ajax({
@@ -49,12 +57,10 @@
                 async: true,
                 cache: false,
                 success: function (data) {
-                    $('#intLike').empty();
-                    $('#intLike').append(data);
+                    $('#like').empty();
+                    $('#like').append(data + ' <i class="far fa-heart"></i>');
                 }
             });
-            $('#like').empty();
-            $('#like').append('<i class="far fa-heart"></i>');
         }
         
     }
@@ -62,35 +68,94 @@
 @{
     ViewData["Title"] = "View";
 }
-<div class="card">
-    <div class="card-body">
-        @if (Model.Item.Img != null)
-        {<img height="180" width="100%" class="rounded mt-1" src="@Model.Item.Img" />}
+<div class="row">
+    <div class="col-md-5 col-md-5 col-lg-5 ml-2 border rounded shadow">
+        <div class="sticky-top mt-2 text-center">
+            <div class="mb-2">
+                @if (Model.Status)
+                {
+                    <form class="btn-group">
+                        <button type="submit" class="btn btn-dark" asp-action="EditItem" asp-route-id="@Model.Item.Id">@Localizer["EditItem"]</button>
+                        <button type="submit" class="btn btn-dark" asp-action="CollectionsItems" asp-route-id="@Model.Item.IdCollection">@Localizer["Back"]</button>
+                    </form>
+                }
+            </div>
+            @if (Model.Item.Img != null)
+            {
+                <div class="text-center">
+                    <img style="width:100%;max-width:600px;max-height:600px;" class="mx-auto rounded shadow mb-3" src="@Model.Item.Img" />
+                </div>
+            }
+            @foreach (var fields in JsonSerializer.Deserialize<Dictionary<string, string[]>>(Model.Item.Fields))
+            {
+                if (fields.Value.Length != 0)
+                {
+                    for (int j = 0; j < fields.Value.Length; j += 2)
+                    {
+                        @if (fields.Key == "int")
+                        {
+                            <div class="row">
+                                <div class="mb-2 mx-auto">
+                                    <h4>@fields.Value.ElementAt(j)</h4>  @fields.Value.ElementAt(j + 1)
+                                </div>
+                            </div>
+                        }
+                        @if (fields.Key == "str")
+                        {
+                            <div class="row">
+                                <div class="mb-2 mx-auto">
+                                    <h4>@fields.Value.ElementAt(j)</h4>  <markdown>@fields.Value.ElementAt(j + 1)</markdown>
+                                </div>
+                            </div>
+                        }
+                        @if (fields.Key == "date")
+                        {
+                            <div class="row">
+                                <div class="mb-2 mx-auto">
+                                    <h4>@fields.Value.ElementAt(j)</h4>  @fields.Value.ElementAt(j + 1)
+                                </div>
+                            </div>
+                        }
+                        @if (fields.Key == "bool")
+                        {
+                            <div class="row">
+                                <div class="mb-2 mx-auto">
+                                    <input type="hidden" id="Bool" name="Bool" class="form-control" value="@fields.Value.ElementAt(j)">
+                                    <h4>
+                                        @fields.Value.ElementAt(j): <input disabled type="checkbox" id="Bool" name="Bool" style="height:15px;width:15px;" @if (fields.Value.ElementAt(j + 1) == "on") { @: checked
+                                                                           }>
+                                    </h4>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+            <div>
+                <input type="hidden" id="searchh" name="name" value="@Model.Item.Id" />
+            </div>
+            <div id="likes">
+                <button type="button" class="btn btn-dark btn-lg" id="like" onclick="Like()" @if (!User.Identity.IsAuthenticated) { @: disabled
+                        }>
+                    @Model.Likes
+                    @if (Model.Liked == false)
+                    {<i class="far fa-heart"></i>}
+                    else
+                    {<i class="fas fa-heart"></i>}
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-4 col-lg-4 mb-2 ml-auto">
+        <div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form asp-action="CreateComment" method="post">
+                    <input type="text" name="Text" />
+                    <button type="submit" name="IdItem" value="@Model.Item.Id">@Localizer["Add"]</button>
+                </form>
+            }
+        </div>
+        <div id="results"></div>
     </div>
 </div>
-<div id="intLike"><p>@Model.Likes</p></div>
-<div id="likes">
-    <button type="button" class="btn btn-secondary btn-lg" id="like" onclick="Like()" @if (!User.Identity.IsAuthenticated) {@:disabled
-            }>@if (Model.Liked == false)
-    {<i class="far fa-heart"></i>}
-    else
-    {<i class="fas fa-heart"></i>}</button>
-</div>
-<div>
-    <input type="hidden" id="searchh" name="name" value="@Model.Item.Id" />
-
-</div>
-<div>
-    <a asp-action="EditItem" asp-route-id="@Model.Item.Id">@Localizer["EditItem"]</a> |
-    <a asp-action="CollectionsItems" asp-route-id="@Model.Item.IdCollection">@Localizer["Back"]</a>
-</div>
-<div>
-    @if (User.Identity.IsAuthenticated)
-    {
-        <form asp-action="CreateComment" method="post">
-            <input type="text" name="Text" />
-            <button type="submit" name="IdItem" value="@Model.Item.Id">@Localizer["Add"]</button>
-        </form>
-    }
-</div>
-<div id="results"></div>
