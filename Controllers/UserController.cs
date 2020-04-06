@@ -16,14 +16,18 @@ namespace CustomIdentityApp.Controllers
         UserManager<User> _userManager;
         SignInManager<User> _signInManager;
         RoleManager<IdentityRole> _roleManager;
+        private readonly TagsContext _tag;
+        private readonly CommentContext _comment;
 
-        public UsersController(RoleManager<IdentityRole> db, CollectionsContext collect, ItemContext item, UserManager<User> userManager, SignInManager<User> signInManager)
+        public UsersController(TagsContext tag, CommentContext comment, RoleManager<IdentityRole> db, CollectionsContext collect, ItemContext item, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _collect = collect;
             _item = item;
             _roleManager = db;
+            _tag = tag;
+            _comment = comment;
         }
 
         public async Task<IActionResult> IndexAsync()
@@ -75,21 +79,30 @@ namespace CustomIdentityApp.Controllers
                         {
                             List<Item> items = _item.AspNetItem.ToList();
                             List<Collect> collections = _collect.AspNetCollection.ToList();
-                            foreach (Collect collection in collections)
+                            foreach (Collect collection in collections.Where(x => x.Email == user.UserName))
                             {
-                                if (collection.Email == user.UserName)
+                                foreach(Item item in items.Where(x => x.Email == user.UserName))
                                 {
-                                    foreach(Item item in items)
+                                    foreach (Tags tag in _tag.Tags.ToList())
                                     {
-                                        if (item.Email == user.UserName)
+                                        if (tag.ItemId.Contains(item.Id))
                                         {
-                                            _item.Remove(item);
-                                            await _item.SaveChangesAsync();
-                                        }
-                                    }
-                                    _collect.Remove(collection);
-                                    await _collect.SaveChangesAsync();
+                                            tag.ItemId = tag.ItemId.Replace(item.Id + '+' + item.Name + ",", "");
+                                            _tag.Update(tag);
+                                        };
+                                    };
+                                    await _tag.SaveChangesAsync();
+                                    _item.AspNetItem.Remove(item);
+                                    foreach (Comments comment in _comment.Comment.ToList())
+                                    {
+                                        if (comment.ItemId == item.Id) _comment.Remove(comment);
+                                    };
+                                    await _comment.SaveChangesAsync();
+                                    _item.Remove(item);
+                                    await _item.SaveChangesAsync();
                                 }
+                                _collect.Remove(collection);
+                                await _collect.SaveChangesAsync();
                             }
                             await _userManager.DeleteAsync(user);
                         }

@@ -104,26 +104,23 @@ namespace contact.Controllers
             Collect collection = await _collect.AspNetCollection.FindAsync(id);
             string IdCollection = collection.Id;
             List<Item> Items = _item.AspNetItem.ToList();
-            foreach (Item item in Items)
+            foreach (Item item in Items.Where(x => x.IdCollection == IdCollection))
             {
-                if (item.IdCollection == IdCollection)
+                foreach (Tags tag in _tag.Tags.ToList())
                 {
-                    foreach (Tags tag in _tag.Tags.ToList())
+                    if (tag.ItemId.Contains(item.Id))
                     {
-                        if (tag.ItemId.Contains(item.Id))
-                        {
-                            tag.ItemId = tag.ItemId.Replace(item.Id + '+' + item.Name + ",", "");
-                            _tag.Update(tag);
-                        };
+                        tag.ItemId = tag.ItemId.Replace(item.Id + '+' + item.Name + ",", "");
+                        _tag.Update(tag);
                     };
-                    await _tag.SaveChangesAsync();
-                    _item.AspNetItem.Remove(item);
-                    foreach (Comments comment in _comment.Comment.ToList())
-                    {
-                        if (comment.ItemId == item.Id) _comment.Remove(comment);
-                    };
-                    await _comment.SaveChangesAsync();
-                }
+                };
+                await _tag.SaveChangesAsync();
+                _item.AspNetItem.Remove(item);
+                foreach (Comments comment in _comment.Comment.ToList())
+                {
+                    if (comment.ItemId == item.Id) _comment.Remove(comment);
+                };
+                await _comment.SaveChangesAsync();
             }
             await _item.SaveChangesAsync();
             _collect.AspNetCollection.Remove(collection);

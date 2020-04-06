@@ -285,7 +285,7 @@ namespace contact.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 User user = await _userManager.FindByNameAsync(User.Identity.Name);
-                if (user.UserName == Item.Email || User.IsInRole("admin")) model.Status = true;
+                if (user.UserName == Item.Email || User.IsInRole("admin") || user.Status == "admin" || user.Status == "god") model.Status = true;
             }
             if (_like.Like.Find(Id) != null)
             {

@@ -37,12 +37,17 @@
                 </div>
                 @if (@*User.IsInRole("Admin")*@Model.status == "true" || Model.Collection.Email == User.Identity.Name)
 {
-<form>
-    <button asp-controller="Items" asp-action="EditCollection" type="submit" class="btn btn-dark mt-2" name="Id" value="@Model.Collection.Id">
-        @Localizer["EditeCollection"]
-    </button>
-</form>
-}
+            <form>
+                <button asp-controller="Items" asp-action="EditCollection" type="submit" class="btn btn-dark mt-2" name="Id" value="@Model.Collection.Id">
+                    @Localizer["EditeCollection"]
+                </button>
+            </form>
+            <form asp-controller="ProfileCollection" asp-action="Delete" asp-route-userEmail="@Model.Collection.Email">
+                <button type="submit" class="btn btn-dark mt-2" name="Id" value="@Model.Collection.Id">
+                    @Localizer["DeleteC"]
+                </button>
+            </form>
+        }
             </div>
         </div>
     </div>
@@ -57,7 +62,7 @@
                         <th scope="col" class="text-truncate" onclick="sortTable(2)">@Localizer["Tag"]<i class="fas fa-sort"></i><br><input class="form-control text-light border-0" type="text" style="background:#333333" /></th>
                         <th></th>
                         @{
-                            var quote = 3;
+                            var quote = 4;
 
                             @foreach (var item in JsonSerializer.Deserialize<Dictionary<string, string[]>>(Model.Collection.Fields))
                             {

@@ -135,6 +135,9 @@
   <data name="Items" xml:space="preserve">
     <value>Items</value>
   </data>
+  <data name="Menu" xml:space="preserve">
+    <value>Menu</value>
+  </data>
   <data name="Theme" xml:space="preserve">
     <value>Theme</value>
   </data>

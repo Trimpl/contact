@@ -137,7 +137,7 @@
     <comment>коллекции айтемов</comment>
   </data>
   <data name="LItems" xml:space="preserve">
-    <value>Послежние добавленные предметы:</value>
+    <value>Последние добавленные предметы:</value>
   </data>
   <data name="Phones" xml:space="preserve">
     <value>Телефоны</value>
