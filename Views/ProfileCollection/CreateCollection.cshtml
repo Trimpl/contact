@@ -8,6 +8,7 @@
 
 
 <form asp-action="Create" asp-route-userEmail="@Model.userEmail" method="post">
+    <input type="hidden" name="userEmail" value="@Model.userEmail" />
     <div class="row justify-content-center">
         <div class="form-group col-lg-2 col-md-5">
             <label for="recipient-name" class="col-form-label">@Localizer["Topic"]</label>
