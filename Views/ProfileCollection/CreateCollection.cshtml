@@ -1,17 +1,23 @@
 ﻿@model contact.ViewModels.CreateCollectionViewModel
 <script src="~/js/addCh.js"></script>
 <link href="~/css/ggg.css" rel="stylesheet" />
+<input type="hidden" id="string" value="@Localizer["Str"]" />
+<input type="hidden" id="integer" value="@Localizer["Int"]" />
+<input type="hidden" id="bool" value="@Localizer["Bool"]" />
+<input type="hidden" id="date" value="@Localizer["Date"]" />
 
 
-<form asp-action="CreateF" asp-route-userEmail="@Model.userEmail" method="post">
+<form asp-action="Create" asp-route-userEmail="@Model.userEmail" method="post">
     <div class="row justify-content-center">
         <div class="form-group col-lg-2 col-md-5">
             <label for="recipient-name" class="col-form-label">@Localizer["Topic"]</label>
-            <input type="text" name="topic" class="form-control" id="recipient-name">
+            <input asp-for="Topic" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);"
+                   } " id="recipient-name">
         </div>
         <div class="form-group col-lg-2 col-md-5">
             <label for="message-text" class="col-form-label">@Localizer["Theme"]</label>
-            <select name="theme" class="form-control" id="message-text">
+            <select asp-for="Theme" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);"
+                    } " id="message-text">
                 <option value="Alcohol">@Localizer["Alcohol"]</option>
                 <option value="Cars">@Localizer["Cars"]</option>
                 <option value="Guns">@Localizer["Guns"]</option>
@@ -22,7 +28,9 @@
     <div class="row justify-content-center">
         <div class="form-group col-lg-4 col-md-10">
             <label for="message-text" class="col-form-label">@Localizer["Description"]</label>
-            <textarea name="description" style="min-height:200px;" class="form-control" id="message-text"></textarea>
+            <textarea asp-for="Description" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);min-height:200px;"
+                      } else { @: style="min-height:200px;
+                                                        }" id="message-text"></textarea>
         </div>
     </div>
     <div class="row justify-content-center">
@@ -30,11 +38,13 @@
     </div>
     <div class="row justify-content-center">
         <div class="form-group col-lg-3 col-md-4">
-            <input type="text" style="display : none;" id="imgur_link" name="img" value="" />
+            <input type="text" style="display : none;" id="imgur_link" asp-for="Img" value="" />
             <input type="text" style="display : none;" id="json" name="json" value="" />
             <div class="custom-file ">
-                <input type="file" class="custom-file-input" onchange="upload(this.files[0])">
-                <label class="custom-file-label text-truncate" for="customFile" id="Label">@Localizer["Upload"]</label>
+                <input type="file" class="custom-file-input @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }" onchange="upload(this.files[0])">
+                <label class="custom-file-label text-truncate @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }" for="customFile" id="Label">@Localizer["Upload"]</label>
             </div>
         </div>
     </div>
@@ -42,20 +52,18 @@
         <div id="add0" class="add"></div>
     </div>
     <div class="row justify-content-center my-3">
-        <select id="selectt" name="language" class="custom-select col-5 col-md-3 col-lg-2">
+        <select id="selectt" name="language" class="custom-select col-5 col-md-3 col-lg-2 @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                }">
             <option value="Int">@Localizer["Int"]</option>
             <option value="Str">@Localizer["Str"]</option>
             <option value="Date">@Localizer["Date"]</option>
             <option value="Bool">@Localizer["Bool"]</option>
         </select>
-        <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
+        <div onclick="select();" class="btn btn-primary">@Localizer["Add"]</div>
     </div>
-    @*<div class="row justify-content-center my-3">
-            <div onclick="select();" class="btn btn-outline-success">@Localizer["Add"]</div>
-        </div>*@
     <div class="row justify-content-center">
         <div>
-            <button class="btn btn-primary" type="submit">
+            <button class="btn btn-dark" type="submit">
                 <div class="btn-txt">@Localizer["Create"]</div>
             </button>
         </div>

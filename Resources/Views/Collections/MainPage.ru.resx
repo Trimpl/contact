@@ -146,6 +146,9 @@
     <value>ru</value>
   </data>
   <data name="Tags" xml:space="preserve">
-    <value>Тэги:</value>
+    <value>Облако тегов:</value>
+  </data>
+  <data name="VItem" xml:space="preserve">
+    <value>Посмотреть итем</value>
   </data>
 </root>

@@ -18,10 +18,11 @@
             setTimeout(SearchTm,0);
         }
         function SearchTm() {
-            console.clear();
             var commentary = $('#Commentary').val();
             var topic = $('#Topic').val();
             var collect = $('#Collect').val();
+            var color = $('#Color').val();
+            var text = $('#Text').val();
             $.ajax({
                 url: '@Url.Action("Search", "Items")?Search=' + $('#search').val(),
                 async: true,
@@ -30,13 +31,13 @@
                     var json = JSON.parse(data);
                     var string = '';
                     $.each(json[0], function (k, val) {
-                        string += '<div class="row"><div class="col py-1 text-truncate d-inline-block">' + commentary +'<a href="Items/Item/' + val.ItemId + '">' + val.Comment + '</a></div></div>';
+                        string += '<a href="https://task3nikolaenok.azurewebsites.net/Items/Item/' + val.ItemId + '">' + '<div class="row table-hover">' + '<div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color + '">' + commentary + val.Comment + '</div></div></a>';
                     });
                     $.each(json[1], function (k, val) {
-                        string += '<div class="row"><div class="col py-1 text-truncate d-inline-block">' + collect + '<a href="Items/CollectionsItems/' + val.Id + '">' + val.Topic + '</a></div></div>';
+                        string += '<a href="https://task3nikolaenok.azurewebsites.net/Items/CollectionsItems/' + val.Id + '">' + '<div class="row"><div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color +'">' + collect + val.Topic + '</div></div></a>';
                     });
                     $.each(json[2], function (k, val) {
-                        string += '<div class="row"><div class="col py-1 text-truncate d-inline-block">' + topic + '<a href="Items/Item/' + val.Id + '">' + val.Name + '</div></div>';
+                        string += '<a href="https://task3nikolaenok.azurewebsites.net/Items/Item/' + val.Id + '">' + '<div class="row"><div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color + '">' + topic + val.Name + '</div></div></a>';
                     });
 
                     $('#searchDiv').empty();
@@ -46,16 +47,37 @@
         }
     </script>
 </head>
-<body>
+<body onclick="empty()" style="@if (Context.Request.Cookies["theme"] == "dark"){@:background:rgb(18,38,63)"
+      } ">
     <input type="hidden" id="Commentary" value="@Localizer["Commentray"]: " />
     <input type="hidden" id="Topic" value="@Localizer["Topic"]: " />
     <input type="hidden" id="Collect" value="@Localizer["Collect"]: " />
+    <input type="hidden" id="Color" value="@if (Context.Request.Cookies["theme"] == "dark") {@:background:rgb(83,129,176);
+           }" />
+    <input type="hidden" id="Text" value="@if (Context.Request.Cookies["theme"] == "dark") {@:text-light
+           }" />
+    <input type="hidden" id="Border" value="@if (Context.Request.Cookies["theme"] == "dark") {@:border-0
+           }" />
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top">
-            <a class="navbar-brand mb-2" asp-area="" asp-controller="Home" asp-action="Index">Курсач</a>
+        <nav class="navbar navbar-expand-lg navbar-dark @if (Context.Request.Cookies["theme"] == "dark") {@:" style="background:rgb(21,46,77)
+                                                                                                            } else {@:bg-dark
+                                                                                                            }">
+            <a class="navbar-brand mb-2 text-light" asp-area="" asp-controller="Home" asp-action="Index">Курсач</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+            <div class="input-group d-flex">
+                <div class="input-group-prepend">
+                    <span class="input-group-text @if (Context.Request.Cookies["theme"] == "dark") {@:border-0" style="background:rgb(83,129,176);"
+                          } else { @: bg-white"
+                          } id=""><i class="fas fa-search"></i></span>
+                </div>
+                <input type="search" autocomplete="off" placeholder="@Localizer["Search"]" onkeyup="Search()" onclick="Search()" id="search" class="form-control rounded-right @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176)"
+                       } else { @: "
+                       }>
+                <div id="searchDiv" class="container bg-white shadow text-dark rounded" style="display: block; position: absolute; z-index: 9999; margin-top:38px; overflow-y: auto; max-width: inherit; max-height: 500px;@if (Context.Request.Cookies["theme"] == "dark") {@:background:rgb(83,129,176);
+                                                        }"></div>
+            </div>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                     @if (!User.Identity.IsAuthenticated)
@@ -75,24 +97,31 @@
                         <li>
                             <a class="nav-link" asp-controller="Collections" asp-action="Logout">@Localizer["Logout"]</a>
                         </li>
-                        <li>
-                            <a class="nav-link text-truncate d-inline-block" asp-controller="Users" asp-action="Index">@Localizer["Usermanagment"]</a>
-                        </li>
+                        if (User.IsInRole("Admin") == true)
+                        {
+                            <li>
+                                <a class="nav-link text-truncate d-inline-block" asp-controller="Users" asp-action="Index">@Localizer["Usermanagment"]</a>
+                            </li>
+                        }
                     }
+                    <li class="nav-item">
+                        <a class="nav-link" asp-controller="Collections" asp-action="ChangeTheme" asp-route-returnUrl="@Context.Request.Path@Context.Request.QueryString">
+                            @if (Context.Request.Cookies["theme"] != "dark")
+                            {@:<i class="far fa-moon"></i>
+                            }
+                            else
+                            { @:<i class="far fa-sun"></i>
+                            }
+                        </a>
+                    </li>
                 </ul>
-                <div class="input-group d-flex">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text bg-white" id=""><i class="fas fa-search"></i></span>
-                    </div>
-                    <input type="search" placeholder="@Localizer["Search"]" onkeyup="Search()" onclick="Search()" id="search" class="form-control rounded-right">
-                    <div id="searchDiv" class="container bg-white shadow text-dark rounded" style="display: block; position: absolute; z-index: 9999; margin-top:38px; overflow-y: auto; max-width: inherit; max-height: 500px;"></div>
-                </div>
-                    @await Html.PartialAsync("_SelectLanguagePartial")
+                @await Html.PartialAsync("_SelectLanguagePartial")
             </div>
         </nav>
     </header>
     <div class="container-fluid">
-        <main role="main" class="my-5 pt-5">
+        <main role="main" class="my-5 pt-5 @if (Context.Request.Cookies["theme"] == "dark") {@: text-light
+                                                        }">
             @RenderBody()
         </main>
     </div>

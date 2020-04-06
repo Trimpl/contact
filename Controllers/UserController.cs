@@ -3,45 +3,38 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using contact.Models;
-using contact.ViewModels;
-using System;
 using System.Collections.Generic;
-using contact.Controllers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CustomIdentityApp.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsersController : Controller
     {
-        private readonly CollectionsContext _context;
-        private readonly ItemContext _context2;
+        private readonly CollectionsContext _collect;
+        private readonly ItemContext _item;
         UserManager<User> _userManager;
         SignInManager<User> _signInManager;
+        RoleManager<IdentityRole> _roleManager;
 
-        public UsersController(CollectionsContext context, ItemContext context2, UserManager<User> userManager, SignInManager<User> signInManager)
+        public UsersController(RoleManager<IdentityRole> db, CollectionsContext collect, ItemContext item, UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _context = context;
-            _context2 = context2;
+            _collect = collect;
+            _item = item;
+            _roleManager = db;
         }
 
         public async Task<IActionResult> IndexAsync()
         {
-            IEnumerable<User> users = _userManager.Users.ToList();
-            bool check = false;
-            foreach (User user in users)
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (user.Status != "admin" && user.Status != "god")
             {
-                if (user.UserName == User.Identity.Name && user.LockoutEnabled == true && (user.Status == "admin" || user.Status == "god"))
-                {
-                    return View(_userManager.Users.ToList());
-                }
-                else if (user.UserName == User.Identity.Name && user.LockoutEnabled == true && user.Status == "user")
-                {
-                    return RedirectToAction("Index", "Home");
-                }
+                await _signInManager.SignOutAsync();
+                return RedirectToAction("Index", "Home");
             }
-            Logout();
-            return RedirectToAction("Index", "Home");
+            return View(_userManager.Users.ToList());
         }
         public bool Check()
         {
@@ -80,8 +73,8 @@ namespace CustomIdentityApp.Controllers
                         User user = await _userManager.FindByIdAsync(id);
                         if (user.Status != "god")
                         {
-                            List<Item> items = _context2.AspNetItem.ToList();
-                            List<Collect> collections = _context.AspNetCollection.ToList();
+                            List<Item> items = _item.AspNetItem.ToList();
+                            List<Collect> collections = _collect.AspNetCollection.ToList();
                             foreach (Collect collection in collections)
                             {
                                 if (collection.Email == user.UserName)
@@ -90,12 +83,12 @@ namespace CustomIdentityApp.Controllers
                                     {
                                         if (item.Email == user.UserName)
                                         {
-                                            _context2.Remove(item);
-                                            await _context2.SaveChangesAsync();
+                                            _item.Remove(item);
+                                            await _item.SaveChangesAsync();
                                         }
                                     }
-                                    _context.Remove(collection);
-                                    await _context.SaveChangesAsync();
+                                    _collect.Remove(collection);
+                                    await _collect.SaveChangesAsync();
                                 }
                             }
                             await _userManager.DeleteAsync(user);
@@ -134,8 +127,11 @@ namespace CustomIdentityApp.Controllers
                     foreach (string id in ids)
                     {
                         User user = await _userManager.FindByIdAsync(id);
-                        user.LockoutEnabled = false;
-                        var result = await _userManager.UpdateAsync(user);
+                        if (user.Status != "god")
+                        {
+                            user.LockoutEnabled = false;
+                            await _userManager.UpdateAsync(user);
+                        };
                     }
                     IEnumerable<User> users = _userManager.Users.ToList();
                     foreach (User user in users)
@@ -191,6 +187,7 @@ namespace CustomIdentityApp.Controllers
         [HttpPost]
         public async Task<ActionResult> Admin()
         {
+            await _roleManager.CreateAsync(new IdentityRole { Name = "Admin", NormalizedName = "ADMIN" });
             if (Check() == true)
             {
                 string sss = "";
@@ -201,19 +198,20 @@ namespace CustomIdentityApp.Controllers
                     foreach (string id in ids)
                     {
                         User user = await _userManager.FindByIdAsync(id);
-                        if (user.Status == "admin")
+                        if (await _userManager.IsInRoleAsync(user, "Admin") == true && user.Status != "god")
                         {
+                            await _userManager.RemoveFromRoleAsync(user, "Admin");
                             user.Status = "user";
                         }
-                        else if (user.Status == "user")
+                        else if (await _userManager.IsInRoleAsync(user, "Admin") == false)
                         {
+                            await _userManager.AddToRoleAsync(user, "Admin");
                             user.Status = "admin";
                         }
-                        var result = await _userManager.UpdateAsync(user);
+                        await _userManager.UpdateAsync(user);
                     }
-                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index", "Users");
+                return RedirectToAction("Index");
             }
             else
             {

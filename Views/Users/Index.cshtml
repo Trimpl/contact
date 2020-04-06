@@ -3,35 +3,36 @@
     ViewBag.Title = User.Identity.Name;
 }
 <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
-@if (User.Identity.IsAuthenticated)
-{
 <div class="d-block mx-auto">
     <form asp-action="Delete">
-        <div class="row">
-            <div class="col-lg-4 p-5">
-                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" asp-controller="Users" asp-action="Block">Block</button>
-            </div>
-            <div class="col-lg-4 p-5">
-                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" asp-controller="Users" asp-action="UnBlock">UnBlock</button>
-            </div>
-            <div class="col-lg-4 p-5">
-                <button class="btn btn-outline-dark btn-block" type="submit" asp-controller="Users" asp-action="Admin">Change role</button>
-            </div>
-            <div class="col-lg-4 p-5">
-                <button class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" value="submit">Delete</button>
-            </div>
-            <table class="table">
-                <thead class="thead-light">
-                    <tr><th><input type="checkbox" class="all" data-id="d1" title="Choose evrything"></th><th>Email</th><th>Name</th><th>Role</th><th>Lock status</th></tr>
+        <div class="btn-group text-center">
+                <button class="btn btn-dark" type="submit" asp-controller="Users" asp-action="Block">Block</button>
+                <button class="btn btn-dark" type="submit" asp-controller="Users" asp-action="UnBlock">UnBlock</button>
+                <button class="btn btn-dark" type="submit" asp-controller="Users" asp-action="Admin">Change role</button>
+                <button class="btn btn-dark" type="submit" value="submit">Delete</button>
+        </div>
+            <table class="table table-hover table-responsive-sm @if (Context.Request.Cookies["theme"] == "dark") {@: table-dark
+                                                        }">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>
+                            <input type="checkbox" class="all" data-id="d1" title="Choose evrything">
+                        </th>
+                        <th>Email</th>
+                        <th>Name</th>
+                        <th>Role</th>
+                        <th>Lock status</th>
+                        <th></th>
+                    </tr>
                 </thead>
                 @foreach (var user in Model)
                 {
-                    @if (User.Identity.Name == user.UserName)
+                    if (User.Identity.Name == user.UserName)
                     {@:<tr class="table-success">
-                }
+                    }
                     else
                     {@:<tr>
-                }
+                    }
                     <td>
                         <input type="checkbox" name="selectedUsers"
                                id="@user.Id" value="@user.Id"
@@ -48,21 +49,14 @@
                         {@:Blocked
                         }
                     </td>
-                    <td><button class="btn btn-outline-dark btn-block" asp-route-userEmail="@user.UserName" asp-controller="ProfileCollection"  asp-action="Profile" type="submit">Профиль</button></td>
+                    <td><button class="btn btn-dark" asp-route-userEmail="@user.UserName" asp-controller="ProfileCollection"  asp-action="Profile" type="submit">Профиль</button></td>
                     @if (user.UserName == user.UserName)
                     {@:</tr>
-                }
+                    }
                 }
             </table>
-                    </div>
-                </form>
-                </div>
-}
-else
-{
-    <a class="btn btn-outline-warning" asp-controller="Account" asp-action="Login">Login</a>
-    <a class="btn btn-outline-warning" asp-controller="Account" asp-action="Register">Register</a>
-}
+    </form>
+</div>
 <script type="text/javascript">
     $(document).ready(function () {
         $(".all").on("change", function () {

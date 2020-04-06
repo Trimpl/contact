@@ -18,5 +18,8 @@
       method="post" class="form-horizontal">
     <select name="culture" onchange="this.form.submit();"
                       asp-for="@requestCulture.RequestCulture.UICulture.Name"
-                      asp-items="cultureItems" class="custom-select" style="width:100px;"></select>
+                      asp-items="cultureItems" class="custom-select @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176); width:100px;
+                                                        } 
+                                                        else {@:" style="width:100px;
+                                                        }"></select>
 </form>

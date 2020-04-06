@@ -6,34 +6,34 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace contact.Controllers
 {
     public class ProfileCollectionController : Controller
     {
         private readonly CommentContext _comment;
-        private readonly CollectionsContext _context;
-        private readonly ItemContext _context2;
+        private readonly CollectionsContext _collect;
+        private readonly ItemContext _item;
         private readonly UserManager<User> _userManager;
         private readonly TagsContext _tag;
-        public ProfileCollectionController(CommentContext comment, TagsContext tag, CollectionsContext context, ItemContext context2, UserManager<User> userManager)
+        public ProfileCollectionController(CommentContext comment, TagsContext tag, CollectionsContext collect, ItemContext item, UserManager<User> userManager)
         {
             _comment = comment;
             _tag = tag;
             _userManager = userManager;
-            _context = context;
-            _context2 = context2;
+            _collect = collect;
+            _item = item;
         }
+
         public async Task<IActionResult> Profile(string userEmail)
         {
             List<Collect> All = new List<Collect>();
-            List<Collect> collections = await _context.AspNetCollection.ToListAsync();
-            List<Item> items = await _context2.AspNetItem.ToListAsync();
-            User user = await _userManager.FindByNameAsync(userEmail);
-            User userMe = await _userManager.FindByNameAsync(User.Identity.Name);
-            if ((userMe.Status != "admin" && userMe.Status != "god") && userEmail != User.Identity.Name)
+            List<Collect> collections = await _collect.AspNetCollection.ToListAsync();
+            List<Item> items = await _item.AspNetItem.ToListAsync();
+            User user = await _userManager.FindByNameAsync(User.Identity.Name);
+            if (!User.IsInRole("Admin") && userEmail != User.Identity.Name)
             {
                 return RedirectToAction("MainPage", "Collections");
             }
@@ -55,16 +55,12 @@ namespace contact.Controllers
             CollectionsViewModel model = new CollectionsViewModel
             {
                 Collections = All,
-                Items = null,
-                SortedCollections = null,
+                //Items = null,
+                //SortedCollections = null,
                 userEmail = userEmail,
-                status = userMe.Status
+                status = user.Status
             };
             return View(model);
-        }
-        public RedirectToActionResult IndexCollection(string Id)
-        {
-            return RedirectToAction("Items", "CollectionsItems", Id);
         }
         public IActionResult CreateCollection(string userEmail)
         {
@@ -74,8 +70,8 @@ namespace contact.Controllers
             };
             return View(collection);
         }
-
-        public async Task<IActionResult> CreateF(string userEmail, string topic, string description, string theme, string img, string Fields)
+        [HttpPost]
+        public async Task<IActionResult> Create(string userEmail, CreateCollectionViewModel model, string Fields)
         {
             string[] integers = Request.Form["Int"];
             string[] strings = Request.Form["Str"];
@@ -91,43 +87,23 @@ namespace contact.Controllers
             Collect collection = new Collect
             {
                 Id = Guid.NewGuid().ToString(),
-                Topic = topic,
-                Description = description,
-                Theme = theme,
-                Img = img,
+                Topic = model.Topic,
+                Description = model.Description,
+                Theme = model.Theme,
+                Img = model.Img,
                 Email = userEmail,
-                Fields = JsonSerializer.Serialize(dictionary)
-        };
-            _context.Add(collection);
-            await _context.SaveChangesAsync();
-            return RedirectToRoute("default", new { controller = "ProfileCollection", action = "Profile", userEmail = userEmail });
-        }
-
-
-
-        [HttpPost]
-        public async Task<IActionResult> Create(string userEmail, string topic, string description, string theme, string? img, string? Int1, string? Int2, string? Int3, string? String1, string? String2, string? String3, string? Bool1, string? Bool2, string? Bool3, string? Date1, string? Date2, string? Date3)
-        {
-            Collect collection = new Collect
-            {
-                Id = Guid.NewGuid().ToString(),
-                Topic = topic,
-                Description = description,
-                Theme = theme,
-                Img = img,
-                Email = userEmail
+                Fields = JsonConvert.SerializeObject(dictionary)
             };
-            _context.Add(collection);
-            await _context.SaveChangesAsync();
+            _collect.Add(collection);
+            await _collect.SaveChangesAsync();
             return RedirectToRoute("default", new { controller = "ProfileCollection", action = "Profile", userEmail = userEmail });
         }
-        string IdCollection;
         [HttpPost]
         public async Task<ActionResult> Delete(string id, string userEmail)
         {
-            Collect collection = await _context.AspNetCollection.FindAsync(id);
-            IdCollection = collection.Id;
-            List<Item> Items = _context2.AspNetItem.ToList();
+            Collect collection = await _collect.AspNetCollection.FindAsync(id);
+            string IdCollection = collection.Id;
+            List<Item> Items = _item.AspNetItem.ToList();
             foreach (Item item in Items)
             {
                 if (item.IdCollection == IdCollection)
@@ -136,13 +112,12 @@ namespace contact.Controllers
                     {
                         if (tag.ItemId.Contains(item.Id))
                         {
-                            tag.ItemId = tag.ItemId.Replace(item.Id + '+' + item.Name, "");
+                            tag.ItemId = tag.ItemId.Replace(item.Id + '+' + item.Name + ",", "");
                             _tag.Update(tag);
-                            if (tag.ItemId == "") _tag.Remove(tag);
                         };
                     };
                     await _tag.SaveChangesAsync();
-                    _context2.AspNetItem.Remove(item);
+                    _item.AspNetItem.Remove(item);
                     foreach (Comments comment in _comment.Comment.ToList())
                     {
                         if (comment.ItemId == item.Id) _comment.Remove(comment);
@@ -150,9 +125,9 @@ namespace contact.Controllers
                     await _comment.SaveChangesAsync();
                 }
             }
-            await _context2.SaveChangesAsync();
-            _context.AspNetCollection.Remove(collection);
-            await _context.SaveChangesAsync();
+            await _item.SaveChangesAsync();
+            _collect.AspNetCollection.Remove(collection);
+            await _collect.SaveChangesAsync();
             return RedirectToRoute("default", new { controller = "ProfileCollection", action = "Profile", userEmail = userEmail });
         }
     }

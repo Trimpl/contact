@@ -4,6 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using contact.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -58,23 +61,28 @@ namespace contact
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddDbContext<LikeContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<User, IdentityRole>(opts => {
-                opts.Password.RequiredLength = 1; 
-                opts.Password.RequireNonAlphanumeric = false;  
-                opts.Password.RequireLowercase = false; 
-                opts.Password.RequireUppercase = false; 
-                opts.Password.RequireDigit = false; 
+
+            services.AddIdentity<User, IdentityRole>(opts =>
+            {
+                opts.Password.RequiredLength = 1;
+                opts.Password.RequireNonAlphanumeric = false;
+                opts.Password.RequireLowercase = false;
+                opts.Password.RequireUppercase = false;
+                opts.Password.RequireDigit = false;
             })
             .AddEntityFrameworkStores<ApplicationContext>();
-            services.AddAuthentication()
-                .AddGoogle(options =>
-                {
-                    IConfigurationSection googleAuthNSection =
-                        Configuration.GetSection("Authentication:Google");
-                    options.ClientId = googleAuthNSection["ClientId"];
-                    options.ClientSecret = googleAuthNSection["ClientSecret"];
-                });
 
+            services.AddAuthentication(options =>
+                    {
+                        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+                    })
+                    .AddCookie()
+                    .AddGoogle(options =>
+                    {
+                        options.ClientId = Configuration["Authentication:Google:ClientId"];
+                        options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                    });
         }
 
        

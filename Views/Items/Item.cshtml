@@ -7,6 +7,9 @@
         function Again() {
             var name = $('#searchh').val();
             name = encodeURIComponent(name);
+            var color = $('#Color').val();
+            var text = $('#Text').val();
+            var status = $('#status').val();
             $.ajax({
                 url: '@Url.Action("ListComments", "Items")?IdItem=' + name,
                 async: true,
@@ -14,13 +17,21 @@
                 success: function (data) {
                     var string = '';
                     $.each(data, function (k, val) {
+                        var date = new Date(Date.parse(val.time));
+                        var d = new Date(date.getFullYear(), date.getMonth(), date.getDay());
+                        d = formatDate(d);
+                        var nowdate = d + '  ' + date.getHours() + ':' + date.getMinutes();
+                        var a = "";
+                        if (status == "True") {
+                            a = '<a class="btn btn-xs" href="/Items/DeleteComment/?Id=' + val.id + '"><i class="fas fa-trash-alt"></i></a>';
+                        };
                         string += '<div id="' + k + '" class="row">' +
-                                        '<div class="col-sm-12 col-md-8 mb-2">' +
-                                            '<div class="card">' +
-                                                '<div class="card-header d-flex justify-content-between">' +
-                                                    '<b>' + val.userEmail + '</b><small class="ml-auto">' + val.time + '</small>'+
+                                        '<div class="col-sm-12 col-md-12 mb-2">' +
+                                            '<div class="card shadow-sm border-0">' +
+                                                '<div class="card-header bg-dark text-light d-flex justify-content-between">' +
+                            '<b>' + val.userEmail + '</b><small class="ml-auto">' + nowdate + '</small>' + a +
                                                 '</div>' +
-                                                '<div class="card-body">'+
+                                                '<div class="card-body"'+ ' style="' + color + '">'+
                                                     '<p class="card-text">' + val.comment + '</p>'+
                                                 '</div>' +
                                             '</div>' +
@@ -28,13 +39,26 @@
                                     '</div>';
                     });
                     if ($('#results').html() != string) {
-                            $('#results').empty();
-                            $('#results').append(string);
+                        $('#results').empty();
+                        $('#results').append(string);
                     };
                     setTimeout(Again,4000);
                 }
             });
         });
+    function formatDate(date) {
+
+        var dd = date.getDate();
+        if (dd < 10) dd = '0' + dd;
+
+        var mm = date.getMonth() + 1;
+        if (mm < 10) mm = '0' + mm;
+
+        var yy = date.getFullYear() % 100;
+        if (yy < 10) yy = '0' + yy;
+
+        return dd + '.' + mm + '.' + yy;
+    }
 </script>
 <script type="text/javascript">
     function Like() {
@@ -68,11 +92,14 @@
 @{
     ViewData["Title"] = "View";
 }
+<input type="hidden" id="status" value="@Model.Status.ToString()" />
 <div class="row">
-    <div class="col-md-5 col-md-5 col-lg-5 ml-2 border rounded shadow">
+    <div class="col-md-5 col-md-5 col-lg-5 mb-3 mx-5 rounded shadow @if (Context.Request.Cookies["theme"] == "dark") {@:border-0" style="background:rgb(21,46,77)
+                                                                            } else {@: border 
+                                                                                    } ">
         <div class="sticky-top mt-2 text-center">
             <div class="mb-2">
-                @if (Model.Status)
+                @if (@*User.IsInRole("Admin") == true*@Model.Status == true)
                 {
                     <form class="btn-group">
                         <button type="submit" class="btn btn-dark" asp-action="EditItem" asp-route-id="@Model.Item.Id">@Localizer["EditItem"]</button>
@@ -135,7 +162,7 @@
                 <input type="hidden" id="searchh" name="name" value="@Model.Item.Id" />
             </div>
             <div id="likes">
-                <button type="button" class="btn btn-dark btn-lg" id="like" onclick="Like()" @if (!User.Identity.IsAuthenticated) { @: disabled
+                <button type="button" class="btn btn-dark btn-lg mb-2" id="like" onclick="Like()" @if (!User.Identity.IsAuthenticated) { @: disabled
                         }>
                     @Model.Likes
                     @if (Model.Liked == false)
@@ -146,13 +173,14 @@
             </div>
         </div>
     </div>
-    <div class="col-sm-12 col-md-4 col-lg-4 mb-2 ml-auto">
+    <div class="col-sm-12 col-md-5 col-lg-4 mb-2 ml-lg-5 ml-md-0">
         <div>
             @if (User.Identity.IsAuthenticated)
             {
-                <form asp-action="CreateComment" method="post">
-                    <input type="text" name="Text" />
-                    <button type="submit" name="IdItem" value="@Model.Item.Id">@Localizer["Add"]</button>
+                <form asp-action="CreateComment" method="post" class="mb-3">
+                    <button class="btn btn-dark btn-block" type="submit" name="IdItem" value="@Model.Item.Id">@Localizer["Add"]</button>
+                    <textarea name="Text" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176)
+                                                                            }" aria-label="With textarea"></textarea>
                 </form>
             }
         </div>

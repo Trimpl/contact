@@ -9,8 +9,8 @@ namespace contact.Controllers
 {
     public class AccountController : Controller
     {
-        UserManager<User> _userManager;
-        SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
         public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
         {
@@ -22,6 +22,7 @@ namespace contact.Controllers
         {
             return View();
         }
+        
         [HttpPost]
         public async Task<IActionResult> Register(RegisterVeiwModel model)
         {
@@ -101,9 +102,9 @@ namespace contact.Controllers
             return RedirectToAction("MainPage", "Collections");
         }
 
-        public IActionResult Manager()
-        {
-            return RedirectToAction("Index", "User");
-        }
+        //public IActionResult Manager()
+        //{
+        //    return RedirectToAction("Index", "User");
+        //}
     }
 }

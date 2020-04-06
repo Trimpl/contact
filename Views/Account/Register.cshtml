@@ -4,29 +4,29 @@
     </div>
 <form method="post" asp-controller="Account" asp-action="Register">
     <div class="form-row text-center" asp-validation-summary="ModelOnly"></div>
-    <div class="col-3 d-block mx-auto">
+    <div class="col-sm-8 col-md-4 col-lg-3 d-block mx-auto">
         <label></label><br />
         <input class="form-control d-block mx-auto text-center" placeholder="@Localizer["Email"]" asp-for="Email" />
         <span asp-validation-for="Email"></span>
     </div>
-    <div class="col-3 d-block mx-auto">
+    <div class="col-sm-8 col-md-4 col-lg-3 d-block mx-auto">
         <label></label><br />
         <input class="form-control d-block mx-auto text-center" placeholder="@Localizer["Name"]" asp-for="Name" />
         <span asp-validation-for="Name"></span>
     </div>
-    <div class="col-3 d-block mx-auto">
+    <div class="col-sm-8 col-md-4 col-lg-3 d-block mx-auto">
         <label></label><br />
         <input class="form-control d-block mx-auto text-center" placeholder="@Localizer["Password"]" asp-for="Password" />
         <span asp-validation-for="Password"></span>
     </div>
-    <div class="col-3 d-block mx-auto">
+    <div class="col-sm-8 col-md-4 col-lg-3 d-block mx-auto">
         <label></label><br />
         <input class="form-control d-block mx-auto text-center" placeholder="@Localizer["PasswordC"]" asp-for="PasswordConfirm" />
         <span asp-validation-for="PasswordConfirm"></span>
     </div>
     <label></label><br />
     <div class="row align-items-center d-block mx-auto">
-        <div class="col-3 d-block mx-auto">
+        <div class="col-sm-8 col-md-4 col-lg-3 d-block mx-auto">
             <div class="card card-block d-block mx-auto">
                 <input class="btn btn-outline-dark btn-block d-block mx-auto" type="submit" value="@Localizer["RegisterU"]">
             </div>

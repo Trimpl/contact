@@ -4,11 +4,37 @@
 <script src="~/js/add.js"></script>
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 <link href="~/css/ggg.css" rel="stylesheet" />
+<div class="mb-5 text-center">
+    @if (Model.tags.Count != 0)
+    {
+        <h4>@Localizer["Tags"]</h4>
+    }
+    @foreach (var tag in Model.tags)
+    {
+            <div class="btn-group">
+                <button type="button" class="btn dropdown-toggle mx-1 my-1 @if (Context.Request.Cookies["theme"] == "dark") {@: btn-primary
+                                                        } else {@:btn-success
+                                                                } " data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    #@tag.Tag
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach (var item in tag.ItemId.Split(","))
+                    {
+                        if (item != "")
+                        {
+                            <a class="dropdown-item" asp-controller="Items" asp-action="Item" asp-route-id="@item.Split('+')[0]">@Localizer["Item"] @item.Split('+')[1]</a>
+                        }
+                    }
+                </div>
+            </div>
+    }
+</div>
 <div class="container my-5">
     <div class="row justify-content-center">
         @foreach (var collection in Model.SortedCollections)
         {
-            <div class="card mx-3 my-3 shadow align-self-start" style="width: 20rem; max-height:700px">
+            <div class="card mx-3 my-3 shadow align-self-start" style="width: 20rem; max-height:700px; @if (Context.Request.Cookies["theme"] == "dark") {@:background:rgb(21,46,77);
+                                                        } ">
                 @if (collection.Img != null)
                 {<img height="180" width="100%" class="rounded mt-1" src="@collection.Img" />}
                 <div class="card-body" style="overflow: hidden; max-height:300px;">
@@ -18,7 +44,7 @@
                 </div>
                 <div class="card-footer bg-transparent justify-content-between">
                     <form asp-controller="Items" asp-action="CollectionsItems" asp-route-Id="@collection.Id">
-                        <button type="submit" class="btn btn-primary" name="Id" value="@collection.Id">
+                        <button type="submit" class="btn btn-dark text-light" name="Id" value="@collection.Id">
                             @Localizer["Items"]:   <span class="badge badge-light">@collection.Item.Count()</span>
                         </button>
                     </form>
@@ -30,14 +56,15 @@
 @if (Model.Items.Count() > 0)
 {<h3 class="text-center">@Localizer["LItems"]</h3>}
 
-<div class="row my-5 shadow mx-auto" style="max-width:800px">
+<div class="row my-5 shadow mx-auto" style="max-width:800px;@if (Context.Request.Cookies["theme"] == "dark") {@:background:rgb(21,46,77);
+                                                        }">
     <div class="col-4">
         <div id="list-example" class="list-group">
             @for (int i = 0; i < 5; i++)
             {
                 if (Model.Items.Count() > i)
                 {
-                    <a class="list-group-item list-group-item-action text-center text-truncate" href="#list-item-@i">@Model.Items.ElementAt(i).Name</a>
+                    <a class="list-group-item btn-dark list-group-item-action text-center text-truncate" href="#list-item-@i">@Model.Items.ElementAt(i).Name</a>
                 }
             }
         </div>
@@ -68,6 +95,11 @@
                             }
                         }
                     }
+                        <form asp-controller="Items" asp-action="Item" asp-route-Id="@Model.Items.ElementAt(i).Id" class="text-center">
+                            <button type="submit" class="btn btn-dark text-light mb-2">
+                                @Localizer["VItem"]
+                            </button>
+                        </form>
                     </div>
                 }
             }
@@ -76,28 +108,3 @@
 </div>
 
 
-
-@*@if (Model.tags.Count() > 0) 
-{<h3 class="text-center">@Localizer["Tags"]</h3> }*@
-<div class="my-5 mx-auto">
-    @foreach (var tag in Model.tags)
-    {
-        if (tag.ItemId != "" && tag.ItemId != ",")
-        {
-            <div class="btn-group mx-auto">
-                <button type="button" class="btn dropdown-toggle mx-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    #@tag.Tag
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    @foreach (var item in tag.ItemId.Split(","))
-                    {
-                        if (item != "")
-                        {
-                            <a class="dropdown-item" asp-controller="Items" asp-action="Item" asp-route-id="@item.Split('+')[0]">@Localizer["Item"] @item.Split('+')[1]</a>
-                        }
-                    }
-                </div>
-            </div>
-        }
-    }
-</div>

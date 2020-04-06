@@ -7,6 +7,7 @@ namespace contact.ViewModels
     {
         [Required]
         [Display(Name = "Email")]
+        [EmailAddress(ErrorMessage = "Некорректный адрес")]
         public string Email { get; set; }
         [Required]
         [Display(Name = "Name")]

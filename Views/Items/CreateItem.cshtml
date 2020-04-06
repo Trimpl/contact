@@ -19,24 +19,54 @@
 })();
 
     </script>
-
+<script type="text/javascript">
+    function SearchT() {
+        var url = $('#validationTooltip03').val();
+        var string = "";
+        $.ajax({
+            url: '@Url.Action("TagList", "Items")',
+            async: true,
+            cache: false,
+            data: { search: url},
+            success: function (data) {
+                $.each(data, function (k, val) {
+                    string += '<button type="button" onclick="Add(' + "'" + val + "'" + ')" class="list-group-item list-group-item-action">' + val + '</button>';
+                });
+                $('#tags').empty();
+                $('#tags').append(string);
+            }
+        });
+    }
+    function empty() {
+        $('#tags').empty();
+    }
+    function Add(str) {
+        console.log('кнопка ' + str);
+        var input = $('#validationTooltip03').val();
+        var array = input.split('#');
+        array.splice(0,1);
+        console.log(input);
+        console.log(array);
+        array.pop();
+        console.log(array);
+        array.push(str);
+        console.log(array);
+        $('#validationTooltip03').val('#' + array.join('#'));
+    }
+</script>
 <div>
     <form asp-action="Create" asp-route-Topic="@Model.Topic" asp-route-Email="@Model.Email" asp-route-IdCollection="@Model.IdCollection" method="post" class="needs-validation" novalidate>
-        @*<div>
-            <label name="Topic" value="@Model.Topic" for="recipient-name" class="col-form-label">@Model.Topic</label>
-        </div>
-        <div>
-            <label name="Email" value="@Model.Email" for="recipient-name" class="col-form-label">@Model.Topic</label>
-        </div>*@
         <input type="hidden" name="Topic" value="@Model.Topic" />
         <input type="hidden" name="Email" value="@Model.Email" />
         <div class="row justify-content-center">
             <div class="col-lg-3 col-md-4 mb-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <div class="input-group-text">@Localizer["Name"]</div>
+                        <div class="input-group-text @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(120,129,176);
+                                                        }">@Localizer["Name"]</div>
                     </div>
-                    <input required type="text" name="Name" class="form-control rounded-right" id="recipient-name">
+                    <input required type="text" name="Name" class="form-control rounded-right @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }" id="recipient-name">
                     <div class="invalid-feedback">
                         @Localizer["feedback"]
                     </div>
@@ -45,12 +75,17 @@
             <div class="col-lg-3 col-md-4 mb-2">
                 <div class="input-group">
                     <div class="input-group-prepend">
-                        <div class="input-group-text">@Localizer["Tag"]</div>
+                        <div class="input-group-text @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(120,129,176);
+                                                        }">@Localizer["Tag"]</div>
                     </div>
-                    <input required type="text" name="Tag" class="form-control rounded-right" id="validationTooltip03" value="#">
+                    <input required onkeyup="SearchT()" autocomplete="off" type="text" name="Tag" class="form-control rounded-right @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }" id="validationTooltip03" value="#">
                     <div class="invalid-feedback">
                         @Localizer["feedback"]
                     </div>
+                </div>
+                <div class="list-group rounded shadow-sm" id="tags" style="position:absolute;z-index:999;max-height:200px;overflow-y:auto;width:inherit;">
+                    
                 </div>
             </div>
         </div>
@@ -61,8 +96,10 @@
             <div class="form-group col-lg-6 col-md-8 my-2">
                 <input type="text" style="display : none;" id="imgur_link" name="img" value="" />
                 <div class="custom-file ">
-                    <input type="file" class="custom-file-input" onchange="upload(this.files[0])">
-                    <label class="custom-file-label text-truncate" for="customFile" id="Label">@Localizer["Upload"]</label>
+                    <input type="file" class="custom-file-input @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }" onchange="upload(this.files[0])">
+                    <label class="custom-file-label text-truncate @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(120,129,176);
+                                                        }" for="customFile" id="Label">@Localizer["Upload"]</label>
                 </div>
             </div>
         </div>
@@ -78,7 +115,8 @@
                             <div class="col-lg-6 col-md-8 mb-2">
                                 <label for="recipient-name" class="col-form-label">@value</label>
                                 <input type="hidden" id="Int" name="Int" class="form-control" value="@value">
-                                <input type="number" id="Int" name="Int" class="form-control">
+                                <input type="number" id="Int" name="Int" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }">
                             </div>
                         </div>
                     }
@@ -88,7 +126,8 @@
                             <div class="col-lg-6 col-md-8 mb-2">
                                 <label for="recipient-name" class="col-form-label">@value</label>
                                 <input type="hidden" id="Str" name="Str" class="form-control" value="@value">
-                                <textarea type="text" id="Str" name="Str" class="form-control"></textarea>
+                                <textarea type="text" id="Str" name="Str" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }"></textarea>
                             </div>
                         </div>
                     }
@@ -98,7 +137,8 @@
                             <div class="col-lg-6 col-md-8 mb-2">
                                 <label for="recipient-name" class="col-form-label">@value</label>
                                 <input type="hidden" id="Date" name="Date" class="form-control" value="@value">
-                                <input type="date" id="Date" name="Date" class="form-control">
+                                <input type="date" id="Date" name="Date" class="form-control @if (Context.Request.Cookies["theme"] == "dark") {@:border-0 text-light" style="background:rgb(83,129,176);
+                                                        }">
                             </div>
                         </div>
                     }
@@ -115,7 +155,7 @@
             }
         }
         <div class="row justify-content-center">
-            <button class="btn btn-secondary" type="submit">
+            <button class="btn btn-dark" type="submit">
                 <div class="btn-txt">@Localizer["CreateItem"]</div>
             </button>
         </div>

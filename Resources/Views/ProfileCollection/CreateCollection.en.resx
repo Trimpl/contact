@@ -124,7 +124,7 @@
     <value>Alcohol</value>
   </data>
   <data name="Bool" xml:space="preserve">
-    <value>Boolean</value>
+    <value>Checkbox</value>
   </data>
   <data name="Cars" xml:space="preserve">
     <value>Cars</value>

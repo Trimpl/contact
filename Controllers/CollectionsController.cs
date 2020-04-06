@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using contact.Models;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using contact.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 namespace contact.Controllers
 {
@@ -54,7 +54,7 @@ namespace contact.Controllers
                 Collections = collections,
                 Items = sortedItems,
                 userEmail = null,
-                tags = _tag.Tags.ToList(),
+                tags = _tag.Tags.Where(tag => tag.ItemId != "" && tag.ItemId != "," && tag.Tag != "").ToList(),
             };
             return View(model);
         }
@@ -68,6 +68,25 @@ namespace contact.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("MainPage", "Collections");
+        }
+
+        public IActionResult ChangeTheme(string returnUrl)
+        {
+            if (Request.Cookies["theme"] == null)
+            {
+                Response.Cookies.Append("theme", "dark", new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+            }
+            else if (Request.Cookies["theme"] == "dark")
+            {
+                Response.Cookies.Delete("theme");
+                Response.Cookies.Append("theme", "light", new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+            }
+            else
+            {
+                Response.Cookies.Delete("theme");
+                Response.Cookies.Append("theme", "dark", new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) });
+            };
+            return LocalRedirect(returnUrl);
         }
     }
 }
