@@ -31,13 +31,13 @@
                     var json = JSON.parse(data);
                     var string = '';
                     $.each(json[0], function (k, val) {
-                        string += '<a href="https://task3nikolaenok.azurewebsites.net/Items/Item/' + val.ItemId + '">' + '<div class="row table-hover">' + '<div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color + '">' + commentary + val.Comment + '</div></div></a>';
+                        string += '<a href="https://localhost:5001/Items/Item/' + val.ItemId + '">' + '<div class="row table-hover">' + '<div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color + '">' + commentary + val.Comment + '</div></div></a>';
                     });
                     $.each(json[1], function (k, val) {
-                        string += '<a href="https://task3nikolaenok.azurewebsites.net/Items/CollectionsItems/' + val.Id + '">' + '<div class="row"><div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color +'">' + collect + val.Topic + '</div></div></a>';
+                        string += '<a href="https://localhost:5001/Items/CollectionsItems/' + val.Id + '">' + '<div class="row"><div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color +'">' + collect + val.Topic + '</div></div></a>';
                     });
                     $.each(json[2], function (k, val) {
-                        string += '<a href="https://task3nikolaenok.azurewebsites.net/Items/Item/' + val.Id + '">' + '<div class="row"><div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color + '">' + topic + val.Name + '</div></div></a>';
+                        string += '<a href="https://localhost:5001/Items/Item/' + val.Id + '">' + '<div class="row"><div class="col py-1 text-truncate d-inline-block ' + text + '" style="' + color + '">' + topic + val.Name + '</div></div></a>';
                     });
 
                     $('#searchDiv').empty();

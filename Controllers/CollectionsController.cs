@@ -27,7 +27,6 @@ namespace contact.Controllers
             _context2 = context2;
             _signInManager = signInManager;
         }
-
         public async Task<IActionResult> MainPage()
         {
             
