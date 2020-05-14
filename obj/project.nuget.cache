@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Fr8pRxoSkMP67IiUIWCTPTIBJdngElVtgtqMXiH63+dwzhf/ChaZ1B93y7G7ZK6rL4K9WIeK5OWLrbjvWt1PLA==",
+  "dgSpecHash": "fWhZZk08fqq6dy1SiYhp4Y/xMdECmb2KmFSYu230R4NUAE5Jl0ODf4NvBHsKbhj84S7jGmEHWTu0hzMqvory5w==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Trimpl\\Desktop\\itra\\contact\\contact.csproj",
+  "projectFilePath": "C:\\Users\\Trimpl\\Desktop\\projects\\contact\\contact.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Trimpl\\.nuget\\packages\\draganddropmultiselectorlist\\1.0.3\\draganddropmultiselectorlist.1.0.3.nupkg.sha512",
     "C:\\Users\\Trimpl\\.nuget\\packages\\jquery\\3.4.1\\jquery.3.4.1.nupkg.sha512",

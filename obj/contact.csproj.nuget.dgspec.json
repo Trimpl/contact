@@ -1,21 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Trimpl\\Desktop\\itra\\contact\\contact.csproj": {}
+    "C:\\Users\\Trimpl\\Desktop\\projects\\contact\\contact.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Trimpl\\Desktop\\itra\\contact\\contact.csproj": {
+    "C:\\Users\\Trimpl\\Desktop\\projects\\contact\\contact.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Trimpl\\Desktop\\itra\\contact\\contact.csproj",
+        "projectUniqueName": "C:\\Users\\Trimpl\\Desktop\\projects\\contact\\contact.csproj",
         "projectName": "contact",
-        "projectPath": "C:\\Users\\Trimpl\\Desktop\\itra\\contact\\contact.csproj",
+        "projectPath": "C:\\Users\\Trimpl\\Desktop\\projects\\contact\\contact.csproj",
         "packagesPath": "C:\\Users\\Trimpl\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Trimpl\\Desktop\\itra\\contact\\obj\\",
+        "outputPath": "C:\\Users\\Trimpl\\Desktop\\projects\\contact\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
         "configFilePaths": [
           "C:\\Users\\Trimpl\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netcoreapp3.1"
