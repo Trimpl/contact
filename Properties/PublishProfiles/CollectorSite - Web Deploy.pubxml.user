@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Этот файл используется процессом публикации или упаковки вашего веб-проекта. Можно настроить поведение этого процесса,
+изменив этот файл MSBuild. Подробности см. на странице https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAR1+HXhM3tUyEvM4VobF45wAAAAACAAAAAAAQZgAAAAEAACAAAABrWN0J1xKp/rbl/YqYW1H03jWIKcOAlnfJttvhDIHDrwAAAAAOgAAAAAIAACAAAADLZFAHq/MuUiUriGLsv4EumecVDzu91UqENgGihlfPGIAAAAAPuu8dH9fvSLYaBUsok7QxVshzGovbB+YpXBbA4YikbSJKeCsjOogJqBSmPbR/BzZL/PFlSQqLG1ofWNsrAqNBijNTKyRav2bhvHxvlprYJlib0yZqLd/QR3cGyHXyfF9RT4q3KfND0+uWOEA4y9ddU7GfxQTDoIoNl/AwlHq2CkAAAADWqmiW8wg4BsaHVSLALXIcu79cmzr8pkHevLLIZTvJM2qZHpRbbeN3KUKYLZ4Ur9jwPLcf80sCKG/YUVNKaAWc</EncryptedPassword>
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="contact.Models.ApplicationContext">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </EFMigrations>
+    <EFMigrations Include="contact.Models.CollectionsContext">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </EFMigrations>
+    <EFMigrations Include="contact.Models.CommentContext">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </EFMigrations>
+    <EFMigrations Include="contact.Models.ItemContext">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </EFMigrations>
+    <EFMigrations Include="contact.Models.LikeContext">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </EFMigrations>
+    <EFMigrations Include="contact.Models.TagsContext">
+      <Value>Data Source=tcp:workresumedbserver.database.windows.net,1433%3bInitial Catalog=workResume_db%3bUser Id=Trimpl%40workresumedbserver%3bPassword=5161Nikola</Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

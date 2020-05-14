@@ -1,4 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <sitemanifest>
-  <IisApp path="C:\Users\Trimpl\Desktop\itra\contact\obj\Release\netcoreapp3.1\PubTmp\Out\" />
+  <IisApp path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\Out\" />
+  <dbfullsql path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\contact.Models.ApplicationContext.sql" />
+  <dbfullsql path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\contact.Models.CollectionsContext.sql" />
+  <dbfullsql path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\contact.Models.CommentContext.sql" />
+  <dbfullsql path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\contact.Models.ItemContext.sql" />
+  <dbfullsql path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\contact.Models.LikeContext.sql" />
+  <dbfullsql path="C:\Users\Trimpl\Desktop\projects\contact\obj\Release\netcoreapp3.1\PubTmp\EFSQLScripts\contact.Models.TagsContext.sql" />
 </sitemanifest>

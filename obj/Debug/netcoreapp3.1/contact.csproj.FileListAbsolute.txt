@@ -426,3 +426,5 @@ C:\Users\Trimpl\Desktop\projects\contact\obj\Debug\netcoreapp3.1\staticwebassets
 C:\Users\Trimpl\Desktop\projects\contact\obj\Debug\netcoreapp3.1\contact.dll
 C:\Users\Trimpl\Desktop\projects\contact\obj\Debug\netcoreapp3.1\contact.pdb
 C:\Users\Trimpl\Desktop\projects\contact\obj\Debug\netcoreapp3.1\contact.genruntimeconfig.cache
+C:\Users\Trimpl\Desktop\projects\contact\obj\Debug\netcoreapp3.1\en\contact.resources.cs
+C:\Users\Trimpl\Desktop\projects\contact\obj\Debug\netcoreapp3.1\ru\contact.resources.cs
