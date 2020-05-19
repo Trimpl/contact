@@ -10,7 +10,7 @@ namespace contact.ViewModels
     {
         public Collect Collection { get; set; }
         public List<Item> Items { get; set; }
-        public string status { get; set; }
+        public bool isAdmin { get; set; }
         public string id { get; set; }
     }
 }

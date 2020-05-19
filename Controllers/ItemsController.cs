@@ -35,17 +35,17 @@ namespace contact.Controllers
             Collect collectionUser = await _collect.AspNetCollection.FindAsync(Id);
             List<Item> All = new List<Item>();
             List<Item> items = await _item.AspNetItem.Where(x => x.IdCollection == collectionUser.Id).ToListAsync();
-            string status = null;
+            bool status = false;
             if (User.Identity.IsAuthenticated)
             {
                 User user = await _userManager.FindByNameAsync(User.Identity.Name);
-                if (user.UserName == collectionUser.Email || User.IsInRole("Admin")) status = "true";
+                if (user.UserName == collectionUser.Email || User.IsInRole("Admin")) status = true;
             }
             ItemsViewModel model = new ItemsViewModel
             {
                 Collection = collectionUser,
                 Items = items,
-                status = status,
+                isAdmin = status,
                 id = Id
             };
             return View(model);
@@ -285,7 +285,7 @@ namespace contact.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 User user = await _userManager.FindByNameAsync(User.Identity.Name);
-                if (user.UserName == Item.Email || User.IsInRole("admin") || user.Status == "admin" || user.Status == "god") model.Status = true;
+                if (user.UserName == Item.Email || User.IsInRole("admin") || user.Status == "admin" || user.Status == "god") model.isAdmin = true;
             }
             if (_like.Like.Find(Id) != null)
             {

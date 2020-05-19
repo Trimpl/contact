@@ -12,6 +12,6 @@ namespace contact.ViewModels
         public List<Comments> comments { get; set; }
         public int Likes { get; set; }
         public bool Liked { get; set; }
-        public bool Status { get; set; }
+        public bool isAdmin { get; set; }
     }
 }
